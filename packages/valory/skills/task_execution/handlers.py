@@ -19,6 +19,7 @@
 
 """This package contains a scaffold of a handler."""
 import threading
+import time
 from typing import Any, Dict, List, cast
 
 from aea.protocols.base import Message
@@ -109,8 +110,19 @@ class IpfsHandler(BaseHandler):
         dialogue = self.context.ipfs_dialogues.update(ipfs_msg)
         nonce = dialogue.dialogue_label.dialogue_reference[0]
         callback = self.params.req_to_callback.pop(nonce)
-        callback(ipfs_msg, dialogue)
+        deadline = self.params.req_to_deadline.pop(nonce)
+
+        if deadline and time.time() > deadline:
+            # Deadline reached
+            self.context.logger.info(f"Deadline reached for task with nonce {nonce}.")
+            self.params.in_flight_req = False
+            self.params.is_cold_start = False
+            return
+
+        if callback:
+            callback(ipfs_msg, dialogue)
         self.params.in_flight_req = False
+        self.params.is_cold_start = False
         self.on_message_handled(message)
 
 
@@ -159,10 +171,19 @@ class ContractHandler(BaseHandler):
 
         self.params.from_block = max([req["block_number"] for req in reqs]) + 1
         self.context.logger.info(f"Received {len(reqs)} new requests.")
+        current_tasks = set(
+            [task["requestId"] for task in self.pending_tasks] +
+            [task["request_id"] for task in self.context.shared_state[DONE_TASKS]] +
+            (
+                [self.params.executing_task.get('requestId')]
+                if self.params.executing_task and self.params.executing_task.get('requestId')
+                else []
+            )
+        )
         reqs = [
             req
             for req in reqs
-            if req["block_number"] % self.params.num_agents == self.params.agent_index
+            if req["block_number"] % self.params.num_agents == self.params.agent_index and req["requestId"] not in current_tasks
         ]
         self.context.logger.info(f"Processing only {len(reqs)} of the new requests.")
         self.pending_tasks.extend(reqs)
@@ -192,6 +213,8 @@ class LedgerHandler(BaseHandler):
             return
 
         block_number = ledger_api_msg.state.body["number"]
-        self.params.from_block = block_number - self.params.from_block_range
+        self.params.req_params.from_block[cast(str, self.params.req_type)] = (
+            block_number - self.params.from_block_range
+        )
         self.params.in_flight_req = False
         self.on_message_handled(message)

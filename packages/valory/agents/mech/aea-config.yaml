@@ -39,12 +39,12 @@ skills:
 - valory/abstract_abci:0.1.0:bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu
 - valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
 - valory/contract_subscription:0.1.0:bafybeiefuemlp75obgpxrp6iuleb3hn6vcviwh5oetk5djbuprf4xsmgjy
-- valory/mech_abci:0.1.0:bafybeiemrbvi2cx6jslwsihlywesiqteuacubxuy44eluozedrjrtsftfq
-- valory/registration_abci:0.1.0:bafybeib3n6vqkfbrcubcbliebjnuwyywdinxkbzt76n6gbn2kg7ace47dq
+- valory/mech_abci:0.1.0:bafybeiejkbexx2il5y42vmffbjp2waapdrxlbcu4ko6amivdp77ex26gmm
+- valory/registration_abci:0.1.0:bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq
 - valory/reset_pause_abci:0.1.0:bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e
 - valory/subscription_abci:0.1.0:bafybeigztasskjzcuxhqezpjrjaieo45pjoroyfraikgbi7knilj3ofsmu
-- valory/task_execution:0.1.0:bafybeib3sacevhq7pspd4rp2o4qgcnthkvrjayjgarxh6qrt2m5vr4pza4
-- valory/task_submission_abci:0.1.0:bafybeienmovzxyifpzp5mvjm3ywy4tu4ujhecawxjdpzfcwb46dhyx4gtm
+- valory/task_execution:0.1.0:bafybeib4skmklyy2y4xlrreepeivwhzsaqvuaq6z2e2ibc3vjn2tmtmu5y
+- valory/task_submission_abci:0.1.0:bafybeiasfjz6csxyvid2pwxwfyjhxfgumxf2vdfyvpsk2lu4tx2sxf4rkm
 - valory/termination_abci:0.1.0:bafybeifi2uodnrjsrivj53g3sjutocmyusbx6mlsb6oanqdyt2mfbyvusy
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
 - valory/websocket_client:0.1.0:bafybeif7rrvsu6z4evqkhblxj3u6wwv2eqou576hgkyoehxuj7cntw7o2m
@@ -217,10 +217,11 @@ models:
       multisend_address: ${str:0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761}
       service_registry_address: ${str:0x9338b5153AE39BB89f50468E608eD9d764B755fD}
       service_endpoint_base: ${str:https://dummy_service.autonolas.tech/}
+      mech_to_config: ${dict:{"0x552cEA7Bc33CbBEb9f1D90c1D11D2C6daefFd053":{"use_dynamic_pricing":false,"is_marketplace_mech":true}}}
       gas_params:
         gas_price: ${int:null}
-        max_fee_per_gas: ${int:null}
-        max_priority_fee_per_gas: ${int:null}
+        max_fee_per_gas: 4000000000
+        max_priority_fee_per_gas: 1000000000
       init_fallback_gas: ${int:500000}
       manual_gas_limit: ${int:1000000}
       service_owner_share: ${float:0.1}
@@ -270,8 +271,7 @@ models:
       num_agents: ${int:4}
       from_block_range: ${int:50000}
       mech_marketplace_address: ${str:0x0000000000000000000000000000000000000000}
-      mech_to_config: ${dict:{"0xFf82123dFB52ab75C417195c5fDB87630145ae81":{"use_dynamic_pricing":false,"is_marketplace_mech":false},
-        "0x77af31De935740567Cf4fF1986D04B2c964A786a":{"use_dynamic_pricing":false,"is_marketplace_mech":false}}}
+      mech_to_config: ${dict:{"0x552cEA7Bc33CbBEb9f1D90c1D11D2C6daefFd053":{"use_dynamic_pricing":false,"is_marketplace_mech":true}}}
       timeout_limit: ${int:3}
       max_block_window: ${int:500}
 ---

@@ -67,6 +67,8 @@ PENDING_TASKS = "pending_tasks"
 DONE_TASKS = "ready_tasks"
 DONE_TASKS_LOCK = "lock"
 GNOSIS_CHAIN = "gnosis"
+INITIAL_DEADLINE = 1200.0  # 20mins of deadline
+SUBSEQUENT_DEADLINE = 60.0  # 1min of deadline
 
 LEDGER_API_ADDRESS = str(LEDGER_CONNECTION_PUBLIC_ID)
 
@@ -79,12 +81,11 @@ class TaskExecutionBehaviour(SimpleBehaviour):
         super().__init__(**kwargs)
         # we only want to execute one task at a time, for the time being
         self._executor = ProcessPoolExecutor(max_workers=1)
-        self._executing_task: Optional[Dict[str, Any]] = None
         self._tools_to_package_hash: Dict[str, str] = {}
         self._all_tools: Dict[str, Tuple[str, str, Dict[str, Any]]] = {}
         self._inflight_tool_req: Optional[str] = None
         self._done_task: Optional[Dict[str, Any]] = None
-        self._last_polling: Optional[float] = None
+        self._last_deadline: Optional[float] = None
         self._invalid_request = False
         self._async_result: Optional[Future] = None
         self._keychain: Optional[KeyChain] = None
@@ -100,6 +101,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
         self._download_tools()
         self._execute_task()
         self._check_for_new_reqs()
+        self._check_for_new_marketplace_reqs()
 
     @property
     def done_tasks_lock(self) -> threading.Lock:
@@ -134,30 +136,37 @@ class TaskExecutionBehaviour(SimpleBehaviour):
         """Get done_tasks."""
         return self.context.shared_state[DONE_TASKS]
 
-    def _should_poll(self) -> bool:
+    def _should_poll(self, req_type: str) -> bool:
         """If we should poll the contract."""
-        if self._last_polling is None:
+        last_polling = self.params.req_params.last_polling.get(req_type, None)
+
+        if last_polling is None:
             return True
-        return self._last_polling + self.params.polling_interval <= time.time()
+        return last_polling + self.params.polling_interval <= time.time()
+
+    def _fetch_deadline(self) -> float:
+        if self.params.is_cold_start:
+            return time.time() + INITIAL_DEADLINE
+        return time.time() + SUBSEQUENT_DEADLINE
 
     def _is_executing_task_ready(self) -> bool:
         """Check if the executing task is ready."""
-        if self._executing_task is None or self._async_result is None:
+        if self.params.executing_task is None or self._async_result is None:
             return False
         return self._async_result.done()
 
     def _has_executing_task_timed_out(self) -> bool:
         """Check if the executing task timed out."""
-        if self._executing_task is None:
+        if self.params.executing_task is None:
             return False
-        timeout_deadline = self._executing_task.get("timeout_deadline", None)
+        timeout_deadline = self.params.executing_task.get("timeout_deadline", None)
         if timeout_deadline is None:
             return False
         return timeout_deadline <= time.time()
 
     def _get_executing_task_result(self) -> Any:
         """Get the executing task result."""
-        if self._executing_task is None:
+        if self.params.executing_task is None:
             raise ValueError("Executing task is None")
         if self._invalid_request:
             return None
@@ -181,6 +190,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
         for tool, file_hash in self._tools_to_package_hash.items():
             if tool in self._all_tools:
                 continue
+
             # read one at a time
             ipfs_msg, message = self._build_ipfs_get_file_req(file_hash)
             self._inflight_tool_req = tool
@@ -211,19 +221,37 @@ class TaskExecutionBehaviour(SimpleBehaviour):
 
     def _check_for_new_reqs(self) -> None:
         """Check for new reqs."""
-        if self.params.in_flight_req or not self._should_poll():
+        if self.params.in_flight_req or not self._should_poll("legacy"):
             # do nothing if there is an in flight request
             # or if we should not poll yet
             return
 
-        if self.params.from_block is None:
+        from_block = self.params.req_params.from_block.get("legacy", None)
+        if from_block is None:
             # set the initial from block
             self._populate_from_block()
+            self.params.req_type = "legacy"
             return
         self._check_undelivered_reqs()
+        self.params.in_flight_req = True
+        self.params.req_params.last_polling["legacy"] = time.time()
+
+    def _check_for_new_marketplace_reqs(self) -> None:
+        """Check for new reqs."""
+        if self.params.in_flight_req or not self._should_poll("marketplace"):
+            # do nothing if there is an in flight request
+            # or if we should not poll yet
+            return
+
+        from_block = self.params.req_params.from_block.get("marketplace", None)
+        if from_block is None:
+            # set the initial from block
+            self._populate_from_block()
+            self.params.req_type = "marketplace"
+            return
         self._check_undelivered_reqs_marketplace()
         self.params.in_flight_req = True
-        self._last_polling = time.time()
+        self.params.req_params.last_polling["marketplace"] = time.time()
 
     def _check_undelivered_reqs(self) -> None:
         """Check for undelivered mech reqs."""
@@ -239,7 +267,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             callable="get_multiple_undelivered_reqs",
             kwargs=ContractApiMessage.Kwargs(
                 dict(
-                    from_block=self.params.from_block,
+                    from_block=self.params.req_params.from_block["legacy"],
                     chain_id=GNOSIS_CHAIN,
                     contract_addresses=target_mechs,
                     max_block_window=self.params.max_block_window,
@@ -248,6 +276,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             counterparty=LEDGER_API_ADDRESS,
             ledger_id=self.context.default_ledger_id,
         )
+        self.params.req_type = "legacy"
         self.context.outbox.put_message(message=contract_api_msg)
 
     def _check_undelivered_reqs_marketplace(self) -> None:
@@ -261,7 +290,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             callable="get_undelivered_reqs",
             kwargs=ContractApiMessage.Kwargs(
                 dict(
-                    from_block=self.params.from_block,
+                    from_block=self.params.req_params.from_block["marketplace"],
                     my_mech=self._get_designated_marketplace_mech_address(),
                     chain_id=GNOSIS_CHAIN,
                     max_block_window=self.params.max_block_window,
@@ -270,6 +299,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             counterparty=LEDGER_API_ADDRESS,
             ledger_id=self.context.default_ledger_id,
         )
+        self.params.req_type = "marketplace"
         self.context.outbox.put_message(message=contract_api_msg)
 
     def _execute_task(self) -> None:
@@ -277,9 +307,24 @@ class TaskExecutionBehaviour(SimpleBehaviour):
         # check if there is a task already executing
         if self.params.in_flight_req:
             # there is an in flight request
+
+            # if no deadline is set it, otherwise continue
+            if self._last_deadline is None:
+                self._last_deadline = self._fetch_deadline()
+
+            # check if the executing task is within deadline or not
+            if time.time() > self._last_deadline:
+                # Deadline reached, restart the task execution
+                self.context.logger.info(
+                    f"Deadline reached for task {self.params.executing_task}. Restarting task execution..."
+                )
+                self._last_deadline = None
+                self.params.in_flight_req = False
+                self.params.is_cold_start = False
+                return self._execute_task()
             return
 
-        if self._executing_task is not None:
+        if self.params.executing_task is not None:
             if self._is_executing_task_ready() or self._invalid_request:
                 task_result = self._get_executing_task_result()
                 self._handle_done_task(task_result)
@@ -294,20 +339,28 @@ class TaskExecutionBehaviour(SimpleBehaviour):
         # create new task
         task_data = self.pending_tasks.pop(0)
         self.context.logger.info(f"Preparing task with data: {task_data}")
-        self._executing_task = task_data
+        self.params.executing_task = task_data
         task_data_ = task_data["data"]
         ipfs_hash = get_ipfs_file_hash(task_data_)
         self.context.logger.info(f"IPFS hash: {ipfs_hash}")
         ipfs_msg, message = self._build_ipfs_get_file_req(ipfs_hash)
-        self.send_message(ipfs_msg, message, self._handle_get_task)
+        self.send_message(
+            ipfs_msg,
+            message,
+            self._handle_get_task,
+        )
 
     def send_message(
-        self, msg: Message, dialogue: Dialogue, callback: Callable
+        self,
+        msg: Message,
+        dialogue: Dialogue,
+        callback: Callable,
     ) -> None:
         """Send message."""
         self.context.outbox.put_message(message=msg)
         nonce = dialogue.dialogue_label.dialogue_reference[0]
         self.params.req_to_callback[nonce] = callback
+        self.params.req_to_deadline[nonce] = cast(float, self._last_deadline)
         self.params.in_flight_req = True
 
     def _get_designated_marketplace_mech_address(self) -> str:
@@ -320,7 +373,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
 
     def _handle_done_task(self, task_result: Any) -> None:
         """Handle done tasks"""
-        executing_task = cast(Dict[str, Any], self._executing_task)
+        executing_task = cast(Dict[str, Any], self.params.executing_task)
         req_id = executing_task.get("requestId", None)
         request_id_nonce = executing_task.get("requestIdWithNonce", None)
         mech_address = (
@@ -377,7 +430,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
 
     def _handle_timeout_task(self) -> None:
         """Handle timeout tasks"""
-        executing_task = cast(Dict[str, Any], self._executing_task)
+        executing_task = cast(Dict[str, Any], self.params.executing_task)
         req_id = executing_task.get("requestId", None)
         self.count_timeout(req_id)
         self.context.logger.info(f"Task timed out for request {req_id}")
@@ -398,7 +451,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             # added to end of queue
             self.context.logger.info(f"Adding task {req_id} to the end of the queue")
             self.pending_tasks.append(executing_task)
-            self._executing_task = None
+            self.params.executing_task = None
             return None
 
         self.context.logger.info(
@@ -426,7 +479,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             self._prepare_task(task_data)
         elif is_data_valid:
             tool = task_data["tool"]
-            executing_task = cast(Dict[str, Any], self._executing_task)
+            executing_task = cast(Dict[str, Any], self.params.executing_task)
             executing_task["tool"] = tool
             self.context.logger.warning(f"Tool {tool} is not valid.")
             self._invalid_request = True
@@ -458,7 +511,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             "model", tool_params.get("default_model", None)
         )
         future = self._submit_task(tool_task.execute, **task_data)
-        executing_task = cast(Dict[str, Any], self._executing_task)
+        executing_task = cast(Dict[str, Any], self.params.executing_task)
         executing_task["timeout_deadline"] = time.time() + self.params.task_deadline
         executing_task["tool"] = task_data["tool"]
         executing_task["model"] = task_data.get(
@@ -519,7 +572,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
 
     def _handle_store_response(self, message: IpfsMessage, dialogue: Dialogue) -> None:
         """Handle the response from ipfs for a store response request."""
-        executing_task = cast(Dict[str, Any], self._executing_task)
+        executing_task = cast(Dict[str, Any], self.params.executing_task)
         req_id, sender = (
             executing_task["requestId"],
             executing_task["sender"],
@@ -534,6 +587,15 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             data=ipfs_hash,
         )
         done_task = cast(Dict[str, Any], self._done_task)
+        if done_task is None or not isinstance(done_task, Dict):
+            self.context.logger.error(
+                f"Invalid done task format. Expected Dict. Actual: {done_task}"
+            )
+            self.params.executing_task = None
+            self._done_task = None
+            self._invalid_request = False
+            return None
+
         task_result = to_multihash(ipfs_hash)
         cost = get_cost_for_done_task(done_task)
         self.context.logger.info(f"Cost for task {req_id}: {cost}")
@@ -550,7 +612,7 @@ class TaskExecutionBehaviour(SimpleBehaviour):
         with self.done_tasks_lock:
             self.done_tasks.append(done_task)
         # reset tasks
-        self._executing_task = None
+        self.params.executing_task = None
         self._done_task = None
         self._invalid_request = False
 
