@@ -74,8 +74,7 @@
         "skill/valory/registration_abci/0.1.0": "bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq",
         "skill/valory/abstract_abci/0.1.0": "bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu",
         "agent/valory/mech/0.1.0": "bafybeif6qrvf2lgxb7s5c54bqpwfpyhqo5b6ry6ntgi35sh4ddmm645viy",
-        "service/valory/mech/0.1.0": "bafybeifp3xveywjuttu7nirfxvx3gyfw7mfogq3k7sxwhgct46u65npgju",
-        "service/valory/mech_quickstart/0.1.0": "bafybeic7nyt734ysd2agj352zlxhxxemi6laeevclvepzzlm53oqp3hwxi"
+        "service/valory/mech/0.1.0": "bafybeifp3xveywjuttu7nirfxvx3gyfw7mfogq3k7sxwhgct46u65npgju"
     },
     "third_party": {}
 }
