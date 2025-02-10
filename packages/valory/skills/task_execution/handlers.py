@@ -119,7 +119,7 @@ class IpfsHandler(BaseHandler):
             self.params.is_cold_start = False
             return
 
-        if callback:
+        if callback is not None:
             callback(ipfs_msg, dialogue)
         self.params.in_flight_req = False
         self.params.is_cold_start = False
@@ -172,18 +172,20 @@ class ContractHandler(BaseHandler):
         self.params.from_block = max([req["block_number"] for req in reqs]) + 1
         self.context.logger.info(f"Received {len(reqs)} new requests.")
         current_tasks = set(
-            [task["requestId"] for task in self.pending_tasks] +
-            [task["request_id"] for task in self.context.shared_state[DONE_TASKS]] +
-            (
-                [self.params.executing_task.get('requestId')]
-                if self.params.executing_task and self.params.executing_task.get('requestId')
+            [task["requestId"] for task in self.pending_tasks]
+            + [task["request_id"] for task in self.context.shared_state[DONE_TASKS]]
+            + (
+                [self.params.executing_task.get("requestId")]
+                if self.params.executing_task
+                and self.params.executing_task.get("requestId")
                 else []
             )
         )
         reqs = [
             req
             for req in reqs
-            if req["block_number"] % self.params.num_agents == self.params.agent_index and req["requestId"] not in current_tasks
+            if req["block_number"] % self.params.num_agents == self.params.agent_index
+            and req["requestId"] not in current_tasks
         ]
         self.context.logger.info(f"Processing only {len(reqs)} of the new requests.")
         self.pending_tasks.extend(reqs)
