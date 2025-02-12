@@ -7,7 +7,7 @@ license: Apache-2.0
 fingerprint:
   README.md: bafybeif7ia4jdlazy6745ke2k2x5yoqlwsgwr6sbztbgqtwvs3ndm2p7ba
 fingerprint_ignore_patterns: []
-agent: valory/mech:0.1.0:bafybeihk73vmbeijgymzhwcyj5mwgfudlgmeglfonwxqqayppn5w3vfifq
+agent: valory/mech:0.1.0:bafybeic6i6bjnk4l47gzn4x3xrj5d4utxqzec2w2ubqf54dlcbchdctn6q
 number_of_agents: 4
 deployment:
   agent:
@@ -45,6 +45,7 @@ type: skill
         use_termination: ${USE_TERMINATION:bool:false}
         manual_gas_limit: ${MANUAL_GAS_LIMIT:int:1000000}
         reset_period_count: ${RESET_PERIOD_COUNT:int:1000}
+        polling_interval: ${POLLING_INTERVAL:float:30.0}
         service_endpoint_base: ${SERVICE_ENDPOINT_BASE:str:https://dummy_service.autonolas.tech/}
         use_slashing: ${USE_SLASHING:bool:false}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
@@ -86,6 +87,7 @@ type: skill
         reset_period_count: ${RESET_PERIOD_COUNT:int:1000}
         use_slashing: ${USE_SLASHING:bool:false}
         slash_cooldown_hours: ${SLASH_COOLDOWN_HOURS:int:3}
+        polling_interval: ${POLLING_INTERVAL:float:30.0}
         slash_threshold_amount: ${SLASH_THRESHOLD_AMOUNT:int:10000000000000000}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         light_slash_unit_amount: ${LIGHT_SLASH_UNIT_AMOUNT:int:5000000000000000}
@@ -117,6 +119,7 @@ type: skill
         service_registry_address: ${SERVICE_REGISTRY_ADDRESS:str:0x0000000000000000000000000000000000000000}
         setup: *id001
         share_tm_config_on_startup: ${USE_ACN:bool:false}
+        polling_interval: ${POLLING_INTERVAL:float:30.0}
         tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
@@ -158,6 +161,7 @@ type: skill
         manual_gas_limit: ${MANUAL_GAS_LIMIT:int:1000000}
         tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
         tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
+        polling_interval: ${POLLING_INTERVAL:float:30.0}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         tendermint_p2p_url: ${TM_P2P_ENDPOINT_NODE_3:str:node0:26656}
         termination_sleep: ${TERMINATION_SLEEP:int:900}

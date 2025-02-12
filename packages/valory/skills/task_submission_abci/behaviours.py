@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2023-2024 Valory AG
+#   Copyright 2023-2025 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ from packages.valory.skills.task_submission_abci.rounds import (
     TransactionPreparationRound,
 )
 from packages.valory.skills.transaction_settlement_abci.payload_tools import (
+    VerificationStatus,
     hash_payload_to_hex,
 )
 
@@ -77,6 +78,7 @@ ZERO_IPFS_HASH = (
 )
 FILENAME = "usage"
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+LAST_TX = "last_tx"
 
 
 class TaskExecutionBaseBehaviour(BaseBehaviour, ABC):
@@ -103,6 +105,12 @@ class TaskExecutionBaseBehaviour(BaseBehaviour, ABC):
         """
         done_tasks = deepcopy(self.context.shared_state.get(DONE_TASKS, []))
         return cast(List[Dict[str, Any]], done_tasks)
+
+    def set_tx(self, last_tx: str) -> None:
+        """Signal that the transaction was prepared."""
+        now = time.time()
+        # store the tx hash and the time it was stored
+        self.context.shared_state[LAST_TX] = (last_tx, now)
 
     def done_tasks_lock(self) -> threading.Lock:
         """Get done_tasks_lock."""
@@ -191,33 +199,40 @@ class TaskPoolingBehaviour(TaskExecutionBaseBehaviour, ABC):
 
     def handle_submitted_tasks(self) -> None:
         """Handle tasks that have been already submitted before (in a prev. period)."""
-        (status, tx_hash) = self.check_last_tx_status()
+        status, tx_hash = self.check_last_tx_status()
         self.context.logger.info(f"Last tx status is: {status}")
         if status:
             submitted_tasks = cast(
                 List[Dict[str, Any]], self.synchronized_data.done_tasks
             )
             self.context.logger.info(
-                f"Tasks {submitted_tasks} has already been submitted. The corresponding tx_hash is: {tx_hash}"
+                f"Tasks {submitted_tasks} has already been submitted. The corresponding tx_hash is: {tx_hash}. "
                 f"Removing them from the list of tasks to be processed."
             )
             self.remove_tasks(submitted_tasks)
 
-    def check_last_tx_status(self) -> Tuple[bool, str]:
+    def check_last_tx_status(self) -> Tuple[bool, Optional[str]]:
         """Check if the tx in the last round was successful or not"""
         # Try to fetch the final tx hash from the sync db
         # If the value exists and is not None, we return True, else False
         # ref: https://github.com/valory-xyz/open-autonomy/blob/main/packages/valory/skills/transaction_settlement_abci/rounds.py#L432-L434
         try:
+            if (
+                self.synchronized_data.final_verification_status
+                != VerificationStatus.VERIFIED
+            ):
+                return False, None
             final_tx_hash = self.synchronized_data.final_tx_hash
+            # added for healthcheck purposes
+            self.set_tx(final_tx_hash)
         except Exception as e:
             self.context.logger.error(e)
-            return (False, "")
+            return False, None
         else:
             if final_tx_hash is not None:
-                return (True, final_tx_hash)
+                return True, final_tx_hash
             else:
-                return (False, "")
+                return False, None
 
 
 class DeliverBehaviour(TaskExecutionBaseBehaviour, ABC):

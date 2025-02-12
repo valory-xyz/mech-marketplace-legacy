@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 #
-#   Copyright 2023 Valory AG
+#   Copyright 2024-2025 Valory AG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 
 import json
 import re
+import time
 from datetime import datetime
 from enum import Enum
 from typing import Callable, Dict, List, Optional, Tuple, Union, cast
@@ -67,6 +68,12 @@ ContractApiHandler = BaseContractApiHandler
 TendermintHandler = BaseTendermintHandler
 IpfsHandler = BaseIpfsHandler
 
+LAST_SUCCESSFUL_READ = "last_successful_read"
+LAST_SUCCESSFUL_EXECUTED_TASK = "last_successful_executed_task"
+WAS_LAST_READ_SUCCESSFUL = "was_last_read_successful"
+LAST_TX = "last_tx"
+PENDING_TASKS = "pending_tasks"
+
 
 class HttpCode(Enum):
     """Http codes"""
@@ -88,6 +95,32 @@ class HttpHandler(BaseHttpHandler):
     """This implements the HTTP handler."""
 
     SUPPORTED_PROTOCOL = HttpMessage.protocol_id
+
+    @property
+    def last_successful_read(self) -> Optional[Tuple[int, float]]:
+        """Get the last successful read."""
+        return cast(
+            Optional[Tuple[int, float]],
+            self.context.shared_state.get(LAST_SUCCESSFUL_READ),
+        )
+
+    @property
+    def last_successful_executed_task(self) -> Optional[Tuple[int, float]]:
+        """Get the last successful executed task."""
+        return cast(
+            Optional[Tuple[int, float]],
+            self.context.shared_state.get(LAST_SUCCESSFUL_EXECUTED_TASK),
+        )
+
+    @property
+    def was_last_read_successful(self) -> bool:
+        """Get the last read status."""
+        return self.context.shared_state.get(WAS_LAST_READ_SUCCESSFUL) is not False
+
+    @property
+    def last_tx(self) -> Optional[Tuple[str, float]]:
+        """Get the last transaction."""
+        return cast(Optional[Tuple[str, float]], self.context.shared_state.get(LAST_TX))
 
     def setup(self) -> None:
         """Implement the setup."""
@@ -308,6 +341,40 @@ class HttpHandler(BaseHttpHandler):
                 r.round_id for r in round_sequence._abci_app._previous_rounds[-10:]
             ]
 
+        # ensure we are delivering
+        grace_period = self.context.params.polling_interval * 10
+        last_executed_task = (
+            self.last_successful_executed_task[1]
+            if self.last_successful_executed_task
+            else time.time() - grace_period * 2
+        )
+        last_tx_made = self.last_tx[1] if self.last_tx else time.time()
+        we_are_delivering = last_executed_task < last_tx_made + grace_period
+
+        # ensure we can get new reqs
+        last_successful_read = (
+            self.last_successful_read[1] if self.last_successful_read else time.time()
+        )
+        we_can_get_new_reqs = last_successful_read > time.time() - grace_period
+
+        error = ""
+        if not we_are_delivering:
+            error = (
+                f"The service is failing to deliver responses. "
+                f"Last executed task was at {last_executed_task} and last tx was at {last_tx_made}. "
+                f"Potential reasons this could happen:\n"
+                f"- RPC Issues. Make sure the RPC is working properly, and there are no reverting txs due to GS026.\n"
+                f"- One of the agents has not enough funds to make a tx. Make sure all agents have enough funds. \n"
+            )
+
+        if not we_can_get_new_reqs:
+            error = (
+                f"The service is failing to get new requests. "
+                f"Last successful read was at {last_successful_read}. "
+                f"This is likely happening becuase the service cannot get new requests from the ledger. "
+                f"Make sure the RPC is working properly."
+            )
+
         data = {
             "seconds_since_last_transition": seconds_since_last_transition,
             "is_tm_healthy": not is_tm_unhealthy,
@@ -316,6 +383,34 @@ class HttpHandler(BaseHttpHandler):
             "current_round": current_round,
             "previous_rounds": previous_rounds,
             "is_transitioning_fast": is_transitioning_fast,
+            "last_successful_read": (
+                {
+                    "block_number": self.last_successful_read[0],
+                    "timestamp": self.last_successful_read[1],
+                }
+                if self.last_successful_read
+                else None
+            ),
+            "last_successful_executed_task": (
+                {
+                    "request_id": self.last_successful_executed_task[0],
+                    "timestamp": self.last_successful_executed_task[1],
+                }
+                if self.last_successful_executed_task
+                else None
+            ),
+            "was_last_read_successful": self.was_last_read_successful,
+            "last_tx": (
+                {
+                    "tx_hash": self.last_tx[0],
+                    "timestamp": self.last_tx[1],
+                }
+                if self.last_tx
+                else None
+            ),
+            "queue_size": len(self.context.shared_state.get(PENDING_TASKS, [])),
+            "is_ok": (we_are_delivering and we_can_get_new_reqs),
+            "error": error,
         }
 
         self._send_ok_response(http_msg, http_dialogue, data)

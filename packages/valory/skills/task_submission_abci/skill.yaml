@@ -8,13 +8,13 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeiholqak7ltw6bbmn2c5tn3j7xgzkdlfzp3kcskiqsvmxoih6m4muq
-  behaviours.py: bafybeigb2ucecuodaa5dvvabyxcmybtxzpi5qt4t2hplbb7wry32zmkuty
+  behaviours.py: bafybeihxgbshcok24d7haozgn4c7kyrhmhdq7g4wm7mtwtkpa3ylvmgl6m
   dialogues.py: bafybeibmac3m5u5h6ucoyjr4dazay72dyga656wvjl6z6saapluvjo54ne
   fsm_specification.yaml: bafybeidtmsmpunr3t77pshd3k2s6dd6hlvhze6inu3gj7xyvlg4wi3tnuu
   handlers.py: bafybeibe5n7my2vd2wlwo73sbma65epjqc7kxgtittewlylcmvnmoxtxzq
-  models.py: bafybeicoes4rtg2edxpdxlrow5dmnof2lm6xscagzp55mocrkbxy2xlxwe
+  models.py: bafybeiccnnvosqwz7w3dbkxqxwnlbfcs65hxm5ycedcoyyitoaggph2hdm
   payloads.py: bafybeia2yorri2u5rwh6vukb6iwdrbn53ygsuuhthns2txptvjipyb6f4e
-  rounds.py: bafybeibgoozf7jmk7g6ahxl6zxaswny35amyiwjakgo5ixxvp7lokz4huu
+  rounds.py: bafybeif3pgr6j7fli2vihndlr7aer7mokzfc63gpvxaxrzvdfgjypnh5vm
   tasks.py: bafybeicu5t5cvfhbndgpxbbtmp4vbmtyb6fba6vsnlewftvuderxp5lwcy
 fingerprint_ignore_patterns: []
 connections: []
@@ -30,9 +30,9 @@ protocols:
 - valory/contract_api:1.0.0:bafybeidgu7o5llh26xp3u3ebq3yluull5lupiyeu6iooi2xyymdrgnzq5i
 - valory/ledger_api:1.0.0:bafybeihdk6psr4guxmbcrc26jr2cbgzpd5aljkqvpwo64bvaz7tdti2oni
 skills:
-- valory/abstract_round_abci:0.1.0:bafybeifylvzfqtepgwn66zgqusfznf7slus5fzf54ay4owxte47x4b2bem
-- valory/transaction_settlement_abci:0.1.0:bafybeieleqba32mkft5oeayykgvupa5eosyhnzwdfjj4cf5go7xzqaqndm
-- valory/task_execution:0.1.0:bafybeihbcvgk5eivazfhpxnhkml25qpnxiu4e645nzm2tax6hvx5ef3wka
+- valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
+- valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
+- valory/task_execution:0.1.0:bafybeigrutqi37h3row74jor3ldhfp7gdayulx54nckyfwfzfhiscjp7my
 behaviours:
   main:
     args: {}
@@ -153,6 +153,7 @@ models:
       slash_threshold_amount: 10000000000000000
       light_slash_unit_amount: 5000000000000000
       serious_slash_unit_amount: 8000000000000000
+      polling_interval: 30.0
       service_endpoint_base: https://dummy_service.autonolas.tech/
     class_name: Params
   requests:
