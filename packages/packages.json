@@ -62,9 +62,9 @@
         "connection/valory/p2p_libp2p_client/0.1.0": "bafybeid3xg5k2ol5adflqloy75ibgljmol6xsvzvezebsg7oudxeeolz7e",
         "connection/valory/http_server/0.22.0": "bafybeihpgu56ovmq4npazdbh6y6ru5i7zuv6wvdglpxavsckyih56smu7m",
         "skill/valory/contract_subscription/0.1.0": "bafybeiefuemlp75obgpxrp6iuleb3hn6vcviwh5oetk5djbuprf4xsmgjy",
-        "skill/valory/mech_abci/0.1.0": "bafybeidr6p7fdumvlxqgr72ejrgsahg24vqumj3mfmm5ag4ygriog53afu",
-        "skill/valory/task_submission_abci/0.1.0": "bafybeidjuyctoje2pntdbin6t2plchp4o2kejxqhrsmjw3iarkjzyigvwe",
-        "skill/valory/task_execution/0.1.0": "bafybeigrutqi37h3row74jor3ldhfp7gdayulx54nckyfwfzfhiscjp7my",
+        "skill/valory/mech_abci/0.1.0": "bafybeidgxj5uhaytuc2rpwxtln7kqcskavkvibg2pjvst2czxwrb7w3msm",
+        "skill/valory/task_submission_abci/0.1.0": "bafybeihi6m2kgatjghvrqtvqsbixxymn6ygb2zknysymn2sthnjwtdsfvy",
+        "skill/valory/task_execution/0.1.0": "bafybeig7twiljnvqbubps6w5xagiaoqrgl5uqn2bnw7had6fwxjjbopn6i",
         "skill/valory/websocket_client/0.1.0": "bafybeif7rrvsu6z4evqkhblxj3u6wwv2eqou576hgkyoehxuj7cntw7o2m",
         "skill/valory/subscription_abci/0.1.0": "bafybeigztasskjzcuxhqezpjrjaieo45pjoroyfraikgbi7knilj3ofsmu",
         "skill/valory/transaction_settlement_abci/0.1.0": "bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy",
@@ -73,8 +73,8 @@
         "skill/valory/reset_pause_abci/0.1.0": "bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e",
         "skill/valory/registration_abci/0.1.0": "bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq",
         "skill/valory/abstract_abci/0.1.0": "bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu",
-        "agent/valory/mech/0.1.0": "bafybeic6i6bjnk4l47gzn4x3xrj5d4utxqzec2w2ubqf54dlcbchdctn6q",
-        "service/valory/mech/0.1.0": "bafybeig5g45uy5hf4l7yoaenskosk3fg2fiyezxum6o5373uxo6l5dczta"
+        "agent/valory/mech/0.1.0": "bafybeibj7rjva5p2vka3whitwtwjxwvcgvrxj2l2casiugt7pdqvunlkhe",
+        "service/valory/mech/0.1.0": "bafybeiewarqp6kzst6dzxctmqwf2m7rtenjojqk7225uforak2n24a24p4"
     },
     "third_party": {}
 }
