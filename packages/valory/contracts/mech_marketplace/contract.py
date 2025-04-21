@@ -313,7 +313,13 @@ class MechMarketplaceContract(Contract):
                 pending_tasks.append(request)
 
         request_ids = [req["requestId"] for req in pending_tasks]
-        eligible_request_ids = cls.has_priority_passed(ledger_api, contract_address, my_mech, request_ids).pop("request_ids")
+        eligible_request_ids = []
+        batch_size = 50
+        for i in range(0, len(request_ids), batch_size):
+            batch_ids = request_ids[i : i + batch_size]
+            batch_eligible_request_ids = cls.has_priority_passed(ledger_api, contract_address, my_mech, batch_ids).pop("request_ids")
+            eligible_request_ids.extend(batch_eligible_request_ids)
+
         pending_tasks = [req for req in pending_tasks if req["requestId"] in eligible_request_ids]
         return {"data": pending_tasks}
 
