@@ -72,14 +72,25 @@ class SynchronizedData(BaseSynchronizedData):
     @property
     def final_tx_hash(self) -> str:
         """Get the verified tx hash."""
-        return cast(str, self.db.get_strict("final_tx_hash"))
+        data = self.db._data
+        n_data = len(data)
+        prev_period = n_data - 2
+        key = "final_tx_hash"
+        tx_hash = data[prev_period][key][-1]
+        return str(tx_hash)
 
     @property
     def final_verification_status(self) -> VerificationStatus:
         """Get the final verification status."""
-        status_value = self.db.get("final_verification_status", None)
-        if status_value is None:
-            return VerificationStatus.NOT_VERIFIED
+        data = self.db._data
+        n_data = len(data)
+        not_verified = VerificationStatus.NOT_VERIFIED
+        if n_data < 2:
+            return not_verified
+
+        prev_period = n_data - 2
+        key = "final_verification_status"
+        status_value = data[prev_period].get(key, [not_verified.value])[-1]
         return VerificationStatus(status_value)
 
 
@@ -253,7 +264,6 @@ class TaskSubmissionAbciApp(AbciApp[Event]):
     cross_period_persisted_keys: FrozenSet[str] = frozenset(
         [
             get_name(SynchronizedData.done_tasks),
-            get_name(SynchronizedData.final_tx_hash),
         ]
     )
     db_pre_conditions: Dict[AppState, Set[str]] = {
