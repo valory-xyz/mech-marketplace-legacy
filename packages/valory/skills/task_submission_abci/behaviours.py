@@ -18,12 +18,13 @@
 # ------------------------------------------------------------------------------
 
 """This package contains round behaviours of TaskExecutionAbciApp."""
+
 import json
 import threading
 import time
 from abc import ABC
 from copy import deepcopy
-from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast
+from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast, Iterable
 
 import openai  # noqa
 from aea.helpers.cid import CID, to_v1
@@ -79,6 +80,7 @@ ZERO_IPFS_HASH = (
 FILENAME = "usage"
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 LAST_TX = "last_tx"
+REQUEST_ID_KEY = "request_id"
 
 
 class TaskExecutionBaseBehaviour(BaseBehaviour, ABC):
@@ -116,7 +118,7 @@ class TaskExecutionBaseBehaviour(BaseBehaviour, ABC):
         """Get done_tasks_lock."""
         return self.context.shared_state[DONE_TASKS_LOCK]
 
-    def remove_tasks(self, submitted_tasks: List[Dict[str, Any]]) -> None:
+    def remove_tasks(self, submitted_tasks: Iterable[Dict[str, Any]]) -> None:
         """
         Pop the tasks from shared state.
 
@@ -130,7 +132,7 @@ class TaskExecutionBaseBehaviour(BaseBehaviour, ABC):
             for done_task in self.done_tasks:
                 is_submitted = False
                 for submitted_task in submitted_tasks:
-                    if submitted_task["request_id"] == done_task["request_id"]:
+                    if submitted_task[REQUEST_ID_KEY] == done_task[REQUEST_ID_KEY]:
                         is_submitted = True
                         break
                 if not is_submitted:
@@ -200,15 +202,18 @@ class TaskPoolingBehaviour(TaskExecutionBaseBehaviour, ABC):
         """Handle tasks that have been already submitted before (in a prev. period)."""
         status, tx_hash = self.check_last_tx_status()
         self.context.logger.info(f"Last tx status is: {status}")
-        if status:
-            submitted_tasks = cast(
-                List[Dict[str, Any]], self.synchronized_data.done_tasks
-            )
-            self.context.logger.info(
-                f"Tasks {submitted_tasks} has already been submitted. The corresponding tx_hash is: {tx_hash}. "
-                f"Removing them from the list of tasks to be processed."
-            )
-            self.remove_tasks(submitted_tasks)
+        if not status:
+            # TODO: remove request_ids from the shared state
+            return
+
+        # TODO: get request_ids from the shared state
+        # TODO based on how you store the request_ids you may not need the following line (e.g. if you store the task)
+        submitted_tasks = ({REQUEST_ID_KEY: request_id} for request_id in request_ids)
+        self.context.logger.info(
+            f"Tasks {submitted_tasks} has already been submitted. The corresponding tx_hash is: {tx_hash}. "
+            f"Removing them from the list of tasks to be processed."
+        )
+        self.remove_tasks(submitted_tasks)
 
     def check_last_tx_status(self) -> Tuple[bool, Optional[str]]:
         """Check if the tx in the last round was successful or not"""
@@ -817,7 +822,8 @@ class TransactionPreparationBehaviour(
             # of the txs. The error will be logged.
             all_txs.extend(split_profit_txs)
 
-        for task in self.synchronized_data.done_tasks:
+        for task in self.synchronized_data.done_tasks[:self.params.tasks_batch_size]:
+            # TODO: store the task's request_id in the shared state
             deliver_tx = yield from self._get_deliver_tx(task)
             if deliver_tx is None:
                 # something went wrong, respond with ERROR payload for now
@@ -946,7 +952,7 @@ class TransactionPreparationBehaviour(
             contract_id=str(AgentMechContract.contract_id),
             contract_callable="get_deliver_data",
             sender_address=self.synchronized_data.safe_contract_address,
-            request_id=task_data["request_id"],
+            request_id=task_data[REQUEST_ID_KEY],
             data=task_data["task_result"],
             request_id_nonce=task_data["request_id_nonce"],
         )
@@ -977,7 +983,7 @@ class TransactionPreparationBehaviour(
             contract_address=task_data["mech_address"],
             contract_id=str(AgentMechContract.contract_id),
             contract_callable="get_deliver_to_market_tx",
-            request_id=task_data["request_id"],
+            request_id=task_data[REQUEST_ID_KEY],
             sender_address=self.synchronized_data.safe_contract_address,
             data=task_data["task_result"],
             mech_staking_instance=self.params.mech_staking_instance_address,
@@ -1006,7 +1012,7 @@ class TransactionPreparationBehaviour(
     ) -> Generator[None, None, Optional[Dict]]:
         """Get the deliver tx."""
         is_marketplace_mech = task_data.get("is_marketplace_mech", False)
-        request_id = task_data["request_id"]
+        request_id = task_data[REQUEST_ID_KEY]
         if is_marketplace_mech:
             self.context.logger.info(
                 f"Delivering reqId {request_id} to marketplace mech contract."
