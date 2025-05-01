@@ -71,6 +71,7 @@ from packages.valory.skills.transaction_settlement_abci.payload_tools import (
 
 ZERO_ETHER_VALUE = 0
 AUTO_GAS = SAFE_GAS = 0
+SUBMITTED_TASKS = "submitted_tasks"
 DONE_TASKS = "ready_tasks"
 DONE_TASKS_LOCK = "lock"
 NO_DATA = b""
@@ -203,12 +204,10 @@ class TaskPoolingBehaviour(TaskExecutionBaseBehaviour, ABC):
         status, tx_hash = self.check_last_tx_status()
         self.context.logger.info(f"Last tx status is: {status}")
         if not status:
-            # TODO: remove request_ids from the shared state
+            self.context.shared_state[SUBMITTED_TASKS] = []
             return
 
-        # TODO: get request_ids from the shared state
-        # TODO based on how you store the request_ids you may not need the following line (e.g. if you store the task)
-        submitted_tasks = ({REQUEST_ID_KEY: request_id} for request_id in request_ids)
+        submitted_tasks = self.context.shared_state[SUBMITTED_TASKS]
         self.context.logger.info(
             f"Tasks {submitted_tasks} has already been submitted. The corresponding tx_hash is: {tx_hash}. "
             f"Removing them from the list of tasks to be processed."
@@ -822,8 +821,9 @@ class TransactionPreparationBehaviour(
             # of the txs. The error will be logged.
             all_txs.extend(split_profit_txs)
 
+        submitted_tasks = []
         for task in self.synchronized_data.done_tasks[:self.params.tasks_batch_size]:
-            # TODO: store the task's request_id in the shared state
+            submitted_tasks.append(task)
             deliver_tx = yield from self._get_deliver_tx(task)
             if deliver_tx is None:
                 # something went wrong, respond with ERROR payload for now
@@ -845,6 +845,7 @@ class TransactionPreparationBehaviour(
             if response_tx is not None:
                 all_txs.append(response_tx)
 
+        self.context.shared_state[SUBMITTED_TASKS] = submitted_tasks
         update_usage_tx = yield from self.get_update_usage_tx()
         if update_usage_tx is None:
             # something went wrong, respond with ERROR payload for now

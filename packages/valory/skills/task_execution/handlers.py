@@ -37,6 +37,7 @@ from packages.valory.skills.task_execution.models import Params
 
 PENDING_TASKS = "pending_tasks"
 DONE_TASKS = "ready_tasks"
+SUBMITTED_TASKS = "submitted_tasks"
 DONE_TASKS_LOCK = "lock"
 LAST_SUCCESSFUL_READ = "last_successful_read"
 LAST_SUCCESSFUL_EXECUTED_TASK = "last_successful_executed_task"
@@ -138,6 +139,7 @@ class ContractHandler(BaseHandler):
         """Setup the contract handler."""
         self.context.shared_state[PENDING_TASKS] = []
         self.context.shared_state[DONE_TASKS] = []
+        self.context.shared_state[SUBMITTED_TASKS] = []
         self.context.shared_state[DONE_TASKS_LOCK] = threading.Lock()
         super().setup()
 
