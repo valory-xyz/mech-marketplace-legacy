@@ -39,12 +39,12 @@ skills:
 - valory/abstract_abci:0.1.0:bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu
 - valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
 - valory/contract_subscription:0.1.0:bafybeiefuemlp75obgpxrp6iuleb3hn6vcviwh5oetk5djbuprf4xsmgjy
-- valory/mech_abci:0.1.0:bafybeigkkwqtyjzj6pwwllc4rdhl5xny3wfy5ngv6ewom6xdvgmovdaqdu
+- valory/mech_abci:0.1.0:bafybeifhd5oyjepmtx2k3vm2qljh6igra32tv7xhgacqb4s6cfzirz2aqm
 - valory/registration_abci:0.1.0:bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq
 - valory/reset_pause_abci:0.1.0:bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e
-- valory/subscription_abci:0.1.0:bafybeigztasskjzcuxhqezpjrjaieo45pjoroyfraikgbi7knilj3ofsmu
-- valory/task_execution:0.1.0:bafybeici6z4fapkwktmk5eyu7geba5fhlmxfojzbeshmz5nrgrsqwt2n5u
-- valory/task_submission_abci:0.1.0:bafybeib6olcunxhihnz5lns6ymkfojqcqhaecwygdgya4hrxibzd53u524
+- valory/subscription_abci:0.1.0:bafybeifqeax45gmgsypekpv72skulpdb4s7xq54wt7sa6fpww6v4yedrmu
+- valory/task_execution:0.1.0:bafybeigrzpcyzyky6l54gffzrf6f5nzesgj6rwfevpnxhvxsekgt5fa62q
+- valory/task_submission_abci:0.1.0:bafybeihm45pfgxmq37qge26yjeqmjwzaqqulqyiicpkkgrw4ts24sc3vqq
 - valory/termination_abci:0.1.0:bafybeifi2uodnrjsrivj53g3sjutocmyusbx6mlsb6oanqdyt2mfbyvusy
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
 - valory/websocket_client:0.1.0:bafybeif7rrvsu6z4evqkhblxj3u6wwv2eqou576hgkyoehxuj7cntw7o2m
@@ -217,7 +217,7 @@ models:
       multisend_address: ${str:0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761}
       service_registry_address: ${str:0x9338b5153AE39BB89f50468E608eD9d764B755fD}
       service_endpoint_base: ${str:https://dummy_service.autonolas.tech/}
-      mech_to_config: ${dict:{"0x552cEA7Bc33CbBEb9f1D90c1D11D2C6daefFd053":{"use_dynamic_pricing":false,"is_marketplace_mech":true}}}
+      mech_to_config: ${dict:{}}
       gas_params:
         gas_price: ${int:null}
         max_fee_per_gas: 4000000000
@@ -230,9 +230,7 @@ models:
       minimum_agent_balance: ${int:100000000000000000}
       termination_from_block: ${int:0}
       polling_interval: ${float:30.0}
-      mech_to_subscription: ${dict:{"0x77af31De935740567Cf4fF1986D04B2c964A786a":{"tokenAddress":"0x0000000000000000000000000000000000000000",
-        "tokenId":"1"},"0xA6bE7Ef2e2FbdA7fB2BfE60726b74A3B2206D67f":{"tokenAddress":"0x0000000000000000000000000000000000000001",
-        "tokenId":"2"}}}
+      mech_to_subscription: ${dict:{}}
       hash_checkpoint_address: ${str:0x694e62BDF7Ff510A4EE66662cf4866A961a31653}
       setup:
         all_participants: ${list:["0x10E867Ac2Fb0Aa156ca81eF440a5cdf373bE1AaC"]}
@@ -245,34 +243,14 @@ models:
   params:
     args:
       task_deadline: ${float:240.0}
-      tools_to_package_hash: ${dict:{"openai-gpt-3.5-turbo-instruct":"bafybeicziwfw7nb7gaxso357hrvtdlv6f23grm2c2rlfngpz4vbvoz2bke",
-        "openai-gpt-3.5-turbo":"bafybeicziwfw7nb7gaxso357hrvtdlv6f23grm2c2rlfngpz4vbvoz2bke",
-        "openai-gpt-4":"bafybeicziwfw7nb7gaxso357hrvtdlv6f23grm2c2rlfngpz4vbvoz2bke",
-        "stabilityai-stable-diffusion-v1-5":"bafybeibaalr745aqajcaijykactx2nmg3jviefvnvpuk5kkxlt2yeedc2q",
-        "stabilityai-stable-diffusion-xl-beta-v2-2-2":"bafybeibaalr745aqajcaijykactx2nmg3jviefvnvpuk5kkxlt2yeedc2q",
-        "stabilityai-stable-diffusion-512-v2-1":"bafybeibaalr745aqajcaijykactx2nmg3jviefvnvpuk5kkxlt2yeedc2q",
-        "stabilityai-stable-diffusion-768-v2-1":"bafybeibaalr745aqajcaijykactx2nmg3jviefvnvpuk5kkxlt2yeedc2q",
-        "transfer-native":"bafybeideuyqn4uslp4ccanzd5tjladzotyi6tiwfxbouecw5ufzgyi4ryy",
-        "prediction-offline":"bafybeig7yntvhhfufaadhd43zr4loivpit43kwfgban72w43xz4u3tansi",
-        "prediction-online":"bafybeig7yntvhhfufaadhd43zr4loivpit43kwfgban72w43xz4u3tansi",
-        "prediction-online-summarized-info":"bafybeig7yntvhhfufaadhd43zr4loivpit43kwfgban72w43xz4u3tansi",
-        "prediction-online-sme":"bafybeiautzxe3faq53ceogfjtfbml5373wvqpsk77c4k3hjivloblivuxy",
-        "prediction-offline-sme":"bafybeiautzxe3faq53ceogfjtfbml5373wvqpsk77c4k3hjivloblivuxy",
-        "claude-prediction-online":"bafybeifp6tn3ovhuz4oipy67ijfdm4y7t2o7en3xuggn6kh5wbwokxmczu",
-        "claude-prediction-offline":"bafybeifp6tn3ovhuz4oipy67ijfdm4y7t2o7en3xuggn6kh5wbwokxmczu",
-        "deepmind-optimization-strong":"bafybeievl777e2425q7zy6qkt26luu2i6xzp4q6pquykntx2yzivy3iwum",
-        "deepmind-optimization":"bafybeievl777e2425q7zy6qkt26luu2i6xzp4q6pquykntx2yzivy3iwum",
-        "prediction-sentence-embedding-conservative":"bafybeihsyxhchqgtdwsd53z4a2lswt6ri4fre2yg2bpjo36kwboilsp7ai",
-        "prediction-sentence-embedding-bold":"bafybeihsyxhchqgtdwsd53z4a2lswt6ri4fre2yg2bpjo36kwboilsp7ai",
-        "prediction-online-sum-url-content":"bafybeial5a56vsowqu4suynnmv5pkt5iebkxtmpgrae57qzi7s6tg4vq6e"}}
-      api_keys: ${dict:{"openai":["dummy_api_key"], "stabilityai":["dummy_api_key"],
-        "google_api_key":["dummy_api_key"], "google_engine_id":["dummy_api_key"]}}
+      tools_to_package_hash: ${dict:{}}
+      api_keys: ${dict:{}}
       polling_interval: ${float:30.0}
       agent_index: ${int:0}
       num_agents: ${int:4}
       from_block_range: ${int:50000}
       mech_marketplace_address: ${str:0x0000000000000000000000000000000000000000}
-      mech_to_config: ${dict:{"0x552cEA7Bc33CbBEb9f1D90c1D11D2C6daefFd053":{"use_dynamic_pricing":false,"is_marketplace_mech":true}}}
+      mech_to_config: ${dict:{}}
       timeout_limit: ${int:3}
       max_block_window: ${int:500}
 ---

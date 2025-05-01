@@ -126,9 +126,8 @@ class TaskExecutionBaseBehaviour(BaseBehaviour, ABC):
         # the amount of done tasks will always be relatively low (<<20)
         # we can afford to do this in a lock
         with self.done_tasks_lock():
-            done_tasks = self.done_tasks
             not_submitted = []
-            for done_task in done_tasks:
+            for done_task in self.done_tasks:
                 is_submitted = False
                 for submitted_task in submitted_tasks:
                     if submitted_task["request_id"] == done_task["request_id"]:

@@ -7,7 +7,7 @@ license: Apache-2.0
 fingerprint:
   README.md: bafybeif7ia4jdlazy6745ke2k2x5yoqlwsgwr6sbztbgqtwvs3ndm2p7ba
 fingerprint_ignore_patterns: []
-agent: valory/mech:0.1.0:bafybeifhnqh5octacdx4tpw6sky3s4ik7k5c3zemqfxqidknsx5mllv6oy
+agent: valory/mech:0.1.0:bafybeifongn4gkmo4ijrnq4iv3peeib72nlimpcxya5fd34a75g6pea4ou
 number_of_agents: 4
 deployment:
   agent:
@@ -59,9 +59,7 @@ type: skill
         metadata_hash: ${METADATA_HASH:str:f01701220caa53607238e340da63b296acab232c18a48e954f0af6ff2b835b2d93f1962f0}
         profit_split_freq: ${PROFIT_SPLIT_FREQ:int:100}
         hash_checkpoint_address: ${CHECKPOINT_ADDRESS:str:0x0000000000000000000000000000000000000000}
-        mech_to_subscription: ${MECH_TO_SUBSCRIPTION:dict:{"0x77af31De935740567Cf4fF1986D04B2c964A786a":{"tokenAddress":"0x0000000000000000000000000000000000000000",
-          "tokenId":"1"},"0xA6bE7Ef2e2FbdA7fB2BfE60726b74A3B2206D67f":{"tokenAddress":"0x0000000000000000000000000000000000000001",
-          "tokenId":"2"}}}
+        mech_to_subscription: ${MECH_TO_SUBSCRIPTION:dict:{}}
         agent_funding_amount: ${AGENT_FUNDING_AMOUNT:int:200000000000000000}
         minimum_agent_balance: ${MINIMUM_AGENT_BALANCE:int:100000000000000000}
         mech_staking_instance_address: ${MECH_STAKING_INSTANCE_ADDRESS:str:0x0000000000000000000000000000000000000000}
@@ -98,9 +96,7 @@ type: skill
         profit_split_freq: ${PROFIT_SPLIT_FREQ:int:100}
         hash_checkpoint_address: ${CHECKPOINT_ADDRESS:str:0x0000000000000000000000000000000000000000}
         service_endpoint_base: ${SERVICE_ENDPOINT_BASE:str:https://dummy_service.autonolas.tech/}
-        mech_to_subscription: ${MECH_TO_SUBSCRIPTION:dict:{"0x77af31De935740567Cf4fF1986D04B2c964A786a":{"tokenAddress":"0x0000000000000000000000000000000000000000",
-          "tokenId":"1"},"0xA6bE7Ef2e2FbdA7fB2BfE60726b74A3B2206D67f":{"tokenAddress":"0x0000000000000000000000000000000000000001",
-          "tokenId":"2"}}}
+        mech_to_subscription: ${MECH_TO_SUBSCRIPTION:dict:{}}
         agent_funding_amount: ${AGENT_FUNDING_AMOUNT:int:200000000000000000}
         mech_marketplace_address: ${MECH_MARKETPLACE_ADDRESS:str:0x0000000000000000000000000000000000000000}
         minimum_agent_balance: ${MINIMUM_AGENT_BALANCE:int:100000000000000000}
@@ -139,9 +135,7 @@ type: skill
         metadata_hash: ${METADATA_HASH:str:f01701220caa53607238e340da63b296acab232c18a48e954f0af6ff2b835b2d93f1962f0}
         profit_split_freq: ${PROFIT_SPLIT_FREQ:int:100}
         hash_checkpoint_address: ${CHECKPOINT_ADDRESS:str:0x0000000000000000000000000000000000000000}
-        mech_to_subscription: ${MECH_TO_SUBSCRIPTION:dict:{"0x77af31De935740567Cf4fF1986D04B2c964A786a":{"tokenAddress":"0x0000000000000000000000000000000000000000",
-          "tokenId":"1"},"0xA6bE7Ef2e2FbdA7fB2BfE60726b74A3B2206D67f":{"tokenAddress":"0x0000000000000000000000000000000000000001",
-          "tokenId":"2"}}}
+        mech_to_subscription: ${MECH_TO_SUBSCRIPTION:dict:{}}
         agent_funding_amount: ${AGENT_FUNDING_AMOUNT:int:200000000000000000}
         minimum_agent_balance: ${MINIMUM_AGENT_BALANCE:int:100000000000000000}
         mech_staking_instance_address: ${MECH_STAKING_INSTANCE_ADDRESS:str:0x0000000000000000000000000000000000000000}
@@ -179,9 +173,7 @@ type: skill
         profit_split_freq: ${PROFIT_SPLIT_FREQ:int:100}
         hash_checkpoint_address: ${CHECKPOINT_ADDRESS:str:0x0000000000000000000000000000000000000000}
         service_endpoint_base: ${SERVICE_ENDPOINT_BASE:str:https://dummy_service.autonolas.tech/}
-        mech_to_subscription: ${MECH_TO_SUBSCRIPTION:dict:{"0x77af31De935740567Cf4fF1986D04B2c964A786a":{"tokenAddress":"0x0000000000000000000000000000000000000000",
-          "tokenId":"1"},"0xA6bE7Ef2e2FbdA7fB2BfE60726b74A3B2206D67f":{"tokenAddress":"0x0000000000000000000000000000000000000001",
-          "tokenId":"2"}}}
+        mech_to_subscription: ${MECH_TO_SUBSCRIPTION:dict:{}}
         agent_funding_amount: ${AGENT_FUNDING_AMOUNT:int:200000000000000000}
         minimum_agent_balance: ${MINIMUM_AGENT_BALANCE:int:100000000000000000}
         mech_staking_instance_address: ${MECH_STAKING_INSTANCE_ADDRESS:str:0x0000000000000000000000000000000000000000}
@@ -201,7 +193,7 @@ type: skill
         num_agents: ${NUM_AGENTS:int:4}
         mech_marketplace_address: ${MECH_MARKETPLACE_ADDRESS:str:0x0000000000000000000000000000000000000000}
         timeout_limit: ${TIMEOUT_LIMIT:int:3}
-        mech_to_config: ${MECH_TO_CONFIG:dict:{"0x552cEA7Bc33CbBEb9f1D90c1D11D2C6daefFd053":{"use_dynamic_pricing":false,"is_marketplace_mech":true}}}
+        mech_to_config: ${MECH_TO_CONFIG:dict:{}}
         max_block_window: ${MAX_BLOCK_WINDOW:int:500}
         from_block_range: ${FROM_BLOCK_RANGE:int:5000}
 1:
@@ -215,7 +207,7 @@ type: skill
         mech_marketplace_address: ${MECH_MARKETPLACE_ADDRESS:str:0x0000000000000000000000000000000000000000}
         agent_index: ${AGENT_INDEX_1:int:1}
         num_agents: ${NUM_AGENTS:int:4}
-        mech_to_config: ${MECH_TO_CONFIG:dict:{"0x552cEA7Bc33CbBEb9f1D90c1D11D2C6daefFd053":{"use_dynamic_pricing":false,"is_marketplace_mech":true}}}
+        mech_to_config: ${MECH_TO_CONFIG:dict:{}}
         timeout_limit: ${TIMEOUT_LIMIT:int:3}
         max_block_window: ${MAX_BLOCK_WINDOW:int:500}
         from_block_range: ${FROM_BLOCK_RANGE:int:5000}
@@ -230,7 +222,7 @@ type: skill
         mech_marketplace_address: ${MECH_MARKETPLACE_ADDRESS:str:0x0000000000000000000000000000000000000000}
         agent_index: ${AGENT_INDEX_2:int:2}
         num_agents: ${NUM_AGENTS:int:4}
-        mech_to_config: ${MECH_TO_CONFIG:dict:{"0x552cEA7Bc33CbBEb9f1D90c1D11D2C6daefFd053":{"use_dynamic_pricing":false,"is_marketplace_mech":true}}}
+        mech_to_config: ${MECH_TO_CONFIG:dict:{}}
         timeout_limit: ${TIMEOUT_LIMIT:int:3}
         max_block_window: ${MAX_BLOCK_WINDOW:int:500}
         from_block_range: ${FROM_BLOCK_RANGE:int:5000}
@@ -246,7 +238,7 @@ type: skill
         agent_index: ${AGENT_INDEX_3:int:3}
         num_agents: ${NUM_AGENTS:int:4}
         timeout_limit: ${TIMEOUT_LIMIT:int:3}
-        mech_to_config: ${MECH_TO_CONFIG:dict:{"0x552cEA7Bc33CbBEb9f1D90c1D11D2C6daefFd053":{"use_dynamic_pricing":false,"is_marketplace_mech":true}}}
+        mech_to_config: ${MECH_TO_CONFIG:dict:{}}
         max_block_window: ${MAX_BLOCK_WINDOW:int:500}
         from_block_range: ${FROM_BLOCK_RANGE:int:5000}
 ---
