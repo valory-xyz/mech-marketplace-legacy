@@ -24,7 +24,18 @@ import threading
 import time
 from abc import ABC
 from copy import deepcopy
-from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, cast, Iterable
+from typing import (
+    Any,
+    Dict,
+    Generator,
+    Iterable,
+    List,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    cast,
+)
 
 import openai  # noqa
 from aea.helpers.cid import CID, to_v1
@@ -822,7 +833,7 @@ class TransactionPreparationBehaviour(
             all_txs.extend(split_profit_txs)
 
         submitted_tasks = []
-        for task in self.synchronized_data.done_tasks[:self.params.tasks_batch_size]:
+        for task in self.synchronized_data.done_tasks[: self.params.tasks_batch_size]:
             submitted_tasks.append(task)
             deliver_tx = yield from self._get_deliver_tx(task)
             if deliver_tx is None:

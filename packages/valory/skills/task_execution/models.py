@@ -88,7 +88,9 @@ class Params(Model):
         self.max_block_window: int = self._ensure_get("max_block_window", kwargs, int)
         # maps the request id to the number of times it has timed out
         self.request_id_to_num_timeouts: Dict[int, int] = defaultdict(lambda: 0)
-        mech_to_config_dict: Dict[str, Dict[str, bool]] = kwargs.get("mech_to_config")
+        mech_to_config_dict: Dict[str, Dict[str, bool]] = kwargs.get(
+            "mech_to_config", None
+        )
         self.mech_to_config: Dict[str, MechConfig] = {
             key: MechConfig.from_dict(value)
             for key, value in mech_to_config_dict.items()

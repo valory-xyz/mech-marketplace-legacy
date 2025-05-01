@@ -186,13 +186,19 @@ class ContractHandler(BaseHandler):
             # for healthcheck metrics
             queue_size = len(self.pending_tasks)
             self.context.logger.info(f"Number of pending tasks: {queue_size=}")
-            self.set_last_successful_read(self.params.req_params.from_block[cast(str, self.params.req_type)])
+            self.set_last_successful_read(
+                self.params.req_params.from_block[cast(str, self.params.req_type)]
+            )
             return
 
-        self.params.req_params.from_block[cast(str, self.params.req_type)] = max([req["block_number"] for req in reqs]) + 1
+        self.params.req_params.from_block[cast(str, self.params.req_type)] = (
+            max([req["block_number"] for req in reqs]) + 1
+        )
         self.context.logger.info(f"Received {len(reqs)} new requests.")
         # for healthcheck metrics
-        self.set_last_successful_read(self.params.req_params.from_block[cast(str, self.params.req_type)])
+        self.set_last_successful_read(
+            self.params.req_params.from_block[cast(str, self.params.req_type)]
+        )
         current_tasks = set(
             [task["requestId"] for task in self.pending_tasks]
             + [task["request_id"] for task in self.context.shared_state[DONE_TASKS]]
