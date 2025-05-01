@@ -154,6 +154,7 @@ models:
       light_slash_unit_amount: 5000000000000000
       serious_slash_unit_amount: 8000000000000000
       polling_interval: 30.0
+      tasks_batch_size: 10
       service_endpoint_base: https://dummy_service.autonolas.tech/
     class_name: Params
   requests:

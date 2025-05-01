@@ -46,6 +46,7 @@ type: skill
         manual_gas_limit: ${MANUAL_GAS_LIMIT:int:1000000}
         reset_period_count: ${RESET_PERIOD_COUNT:int:1000}
         polling_interval: ${POLLING_INTERVAL:float:30.0}
+        tasks_batch_size: ${TASKS_BATCH_SIZE:int:10}
         service_endpoint_base: ${SERVICE_ENDPOINT_BASE:str:https://dummy_service.autonolas.tech/}
         use_slashing: ${USE_SLASHING:bool:false}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
@@ -86,6 +87,7 @@ type: skill
         use_slashing: ${USE_SLASHING:bool:false}
         slash_cooldown_hours: ${SLASH_COOLDOWN_HOURS:int:3}
         polling_interval: ${POLLING_INTERVAL:float:30.0}
+        tasks_batch_size: ${TASKS_BATCH_SIZE:int:10}
         slash_threshold_amount: ${SLASH_THRESHOLD_AMOUNT:int:10000000000000000}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         light_slash_unit_amount: ${LIGHT_SLASH_UNIT_AMOUNT:int:5000000000000000}
@@ -116,6 +118,7 @@ type: skill
         setup: *id001
         share_tm_config_on_startup: ${USE_ACN:bool:false}
         polling_interval: ${POLLING_INTERVAL:float:30.0}
+        tasks_batch_size: ${TASKS_BATCH_SIZE:int:10}
         tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
@@ -156,6 +159,7 @@ type: skill
         tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
         tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
         polling_interval: ${POLLING_INTERVAL:float:30.0}
+        tasks_batch_size: ${TASKS_BATCH_SIZE:int:10}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         tendermint_p2p_url: ${TM_P2P_ENDPOINT_NODE_3:str:node0:26656}
         termination_sleep: ${TERMINATION_SLEEP:int:900}
