@@ -321,7 +321,7 @@ class DeliverBehaviour(TaskExecutionBaseBehaviour, ABC):
             self.context.logger.warning("Could not get current usage.")
             return None
 
-        done_tasks = self.synchronized_data.done_tasks
+        done_tasks = self.synchronized_data.done_tasks[: self.params.tasks_batch_size]
         updated_usage = self._update_current_delivery_report(current_usage, done_tasks)
         return updated_usage
 
