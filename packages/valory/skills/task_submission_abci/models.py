@@ -93,6 +93,7 @@ class Params(BaseParams):
         self.minimum_agent_balance = self._ensure("minimum_agent_balance", kwargs, int)
         self.agent_funding_amount = self._ensure("agent_funding_amount", kwargs, int)
         self.polling_interval = self._ensure("polling_interval", kwargs, float)
+        self.tasks_batch_size = self._ensure("tasks_batch_size", kwargs, int)
         super().__init__(*args, **kwargs)
 
     @classmethod

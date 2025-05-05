@@ -8,13 +8,13 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeiholqak7ltw6bbmn2c5tn3j7xgzkdlfzp3kcskiqsvmxoih6m4muq
-  behaviours.py: bafybeifnsu54ytgh6mk4kb2nkglgxsvywinfob47mw5k7yh5bp6s6pdv2a
+  behaviours.py: bafybeict42xgnpphqh7xh75y6wbkov7lznj5hwhng6k3wpxhuu6nqgcgka
   dialogues.py: bafybeibmac3m5u5h6ucoyjr4dazay72dyga656wvjl6z6saapluvjo54ne
   fsm_specification.yaml: bafybeidtmsmpunr3t77pshd3k2s6dd6hlvhze6inu3gj7xyvlg4wi3tnuu
   handlers.py: bafybeibe5n7my2vd2wlwo73sbma65epjqc7kxgtittewlylcmvnmoxtxzq
-  models.py: bafybeiccnnvosqwz7w3dbkxqxwnlbfcs65hxm5ycedcoyyitoaggph2hdm
+  models.py: bafybeiauw3woy7wa5iejlddq3avwoyauchir4a27uejbnwg33iy7zk4rsm
   payloads.py: bafybeia2yorri2u5rwh6vukb6iwdrbn53ygsuuhthns2txptvjipyb6f4e
-  rounds.py: bafybeiamqsyvahcpgrbcvppxxcl5ss6oz4qjtvm3niteckowkxgraswv2e
+  rounds.py: bafybeifdphyrcyz6rsl7hboufbkem36znsc7wjzd6qv5djxwmgbj2htz2y
   tasks.py: bafybeicu5t5cvfhbndgpxbbtmp4vbmtyb6fba6vsnlewftvuderxp5lwcy
 fingerprint_ignore_patterns: []
 connections: []
@@ -32,7 +32,7 @@ protocols:
 skills:
 - valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
-- valory/task_execution:0.1.0:bafybeigrzpcyzyky6l54gffzrf6f5nzesgj6rwfevpnxhvxsekgt5fa62q
+- valory/task_execution:0.1.0:bafybeif44h3e7k3iatvilewkgkmlhwci2gcrlr4iehb6ppqp7r4iglegzm
 behaviours:
   main:
     args: {}
@@ -154,6 +154,7 @@ models:
       light_slash_unit_amount: 5000000000000000
       serious_slash_unit_amount: 8000000000000000
       polling_interval: 30.0
+      tasks_batch_size: 10
       service_endpoint_base: https://dummy_service.autonolas.tech/
     class_name: Params
   requests:

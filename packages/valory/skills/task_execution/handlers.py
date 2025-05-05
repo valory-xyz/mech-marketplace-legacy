@@ -37,6 +37,7 @@ from packages.valory.skills.task_execution.models import Params
 
 PENDING_TASKS = "pending_tasks"
 DONE_TASKS = "ready_tasks"
+SUBMITTED_TASKS = "submitted_tasks"
 DONE_TASKS_LOCK = "lock"
 LAST_SUCCESSFUL_READ = "last_successful_read"
 LAST_SUCCESSFUL_EXECUTED_TASK = "last_successful_executed_task"
@@ -138,6 +139,7 @@ class ContractHandler(BaseHandler):
         """Setup the contract handler."""
         self.context.shared_state[PENDING_TASKS] = []
         self.context.shared_state[DONE_TASKS] = []
+        self.context.shared_state[SUBMITTED_TASKS] = []
         self.context.shared_state[DONE_TASKS_LOCK] = threading.Lock()
         super().setup()
 
@@ -184,13 +186,19 @@ class ContractHandler(BaseHandler):
             # for healthcheck metrics
             queue_size = len(self.pending_tasks)
             self.context.logger.info(f"Number of pending tasks: {queue_size=}")
-            self.set_last_successful_read(self.params.req_params.from_block[cast(str, self.params.req_type)])
+            self.set_last_successful_read(
+                self.params.req_params.from_block[cast(str, self.params.req_type)]
+            )
             return
 
-        self.params.req_params.from_block[cast(str, self.params.req_type)] = max([req["block_number"] for req in reqs]) + 1
+        self.params.req_params.from_block[cast(str, self.params.req_type)] = (
+            max([req["block_number"] for req in reqs]) + 1
+        )
         self.context.logger.info(f"Received {len(reqs)} new requests.")
         # for healthcheck metrics
-        self.set_last_successful_read(self.params.req_params.from_block[cast(str, self.params.req_type)])
+        self.set_last_successful_read(
+            self.params.req_params.from_block[cast(str, self.params.req_type)]
+        )
         current_tasks = set(
             [task["requestId"] for task in self.pending_tasks]
             + [task["request_id"] for task in self.context.shared_state[DONE_TASKS]]

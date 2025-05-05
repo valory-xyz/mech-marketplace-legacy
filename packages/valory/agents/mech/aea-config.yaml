@@ -22,7 +22,7 @@ contracts:
 - valory/hash_checkpoint:0.1.0:bafybeibpfllgkoa2fb47gtb7qwlb6gya5yufgm7m7u5f3cdwxuu2r2grw4
 - valory/multisend:0.1.0:bafybeig5byt5urg2d2bsecufxe5ql7f4mezg3mekfleeh32nmuusx66p4y
 - valory/service_registry:0.1.0:bafybeicky7duncl25yif5gduo7a3ccgbgfo4pkx6rvexooyvzgyomcfuy4
-- valory/mech_marketplace:0.1.0:bafybeigj72slec4m6dz5jma2uw5jghb2c4kzsdif7dk55qzi6k5ehns66y
+- valory/mech_marketplace:0.1.0:bafybeidqpasancxqwfsdcvyz4wzvufw6gxqkletxrezvbcaa3vgbanaue4
 protocols:
 - open_aea/signing:1.0.0:bafybeihv62fim3wl2bayavfcg3u5e5cxu3b7brtu4cn5xoxd6lqwachasi
 - valory/abci:0.1.0:bafybeiaqmp7kocbfdboksayeqhkbrynvlfzsx4uy4x6nohywnmaig4an7u
@@ -39,12 +39,12 @@ skills:
 - valory/abstract_abci:0.1.0:bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu
 - valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
 - valory/contract_subscription:0.1.0:bafybeiefuemlp75obgpxrp6iuleb3hn6vcviwh5oetk5djbuprf4xsmgjy
-- valory/mech_abci:0.1.0:bafybeifhd5oyjepmtx2k3vm2qljh6igra32tv7xhgacqb4s6cfzirz2aqm
+- valory/mech_abci:0.1.0:bafybeiewct5ldrjoybqzaegeq2ddjgre7smbznk2m44w6toghdvf2oxv2m
 - valory/registration_abci:0.1.0:bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq
 - valory/reset_pause_abci:0.1.0:bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e
 - valory/subscription_abci:0.1.0:bafybeifqeax45gmgsypekpv72skulpdb4s7xq54wt7sa6fpww6v4yedrmu
-- valory/task_execution:0.1.0:bafybeigrzpcyzyky6l54gffzrf6f5nzesgj6rwfevpnxhvxsekgt5fa62q
-- valory/task_submission_abci:0.1.0:bafybeihm45pfgxmq37qge26yjeqmjwzaqqulqyiicpkkgrw4ts24sc3vqq
+- valory/task_execution:0.1.0:bafybeif44h3e7k3iatvilewkgkmlhwci2gcrlr4iehb6ppqp7r4iglegzm
+- valory/task_submission_abci:0.1.0:bafybeifloqr3uqmxp2265izhjyhd5ozipqtjrotwbkn24lv2njidvlcgam
 - valory/termination_abci:0.1.0:bafybeifi2uodnrjsrivj53g3sjutocmyusbx6mlsb6oanqdyt2mfbyvusy
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
 - valory/websocket_client:0.1.0:bafybeif7rrvsu6z4evqkhblxj3u6wwv2eqou576hgkyoehxuj7cntw7o2m
@@ -230,6 +230,7 @@ models:
       minimum_agent_balance: ${int:100000000000000000}
       termination_from_block: ${int:0}
       polling_interval: ${float:30.0}
+      tasks_batch_size: ${int:10}
       mech_to_subscription: ${dict:{}}
       hash_checkpoint_address: ${str:0x694e62BDF7Ff510A4EE66662cf4866A961a31653}
       setup:
