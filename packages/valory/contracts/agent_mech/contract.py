@@ -148,22 +148,12 @@ partial_abis = [
     ],
 ]
 
-TOPIC_BYTES = 32
-TOPIC_CHARS = TOPIC_BYTES * 2
-Ox = "0x"
-Ox_CHARS = len(Ox)
-
 
 class MechOperation(Enum):
     """Operation types."""
 
     CALL = 0
     DELEGATE_CALL = 1
-
-
-def pad_address_for_topic(address: str) -> HexBytes:
-    """Left-pad an Ethereum address to 32 bytes for use in a topic."""
-    return HexBytes(Ox + address[Ox_CHARS:].zfill(TOPIC_CHARS))
 
 
 class AgentMechContract(Contract):
