@@ -9,7 +9,7 @@ fingerprint:
   BatchPriorityPassedCheck.sol: bafybeie3hfpyss43sggqh5rjzwsqe7o37td4v4k6f3hlweiosnayyseo4i
   __init__.py: bafybeigqedpnruwcvjarngql7yfnpqwozvvgzcei2xcrp7mjf4ccspa62y
   build/MechMarketplace.json: bafybeiavaelxgltfzquszveskzn732c47tbkyoqd6gwbk3by6ky2n73rcm
-  contract.py: bafybeiabzo4vqtblazb5tliykl7kejv2gvpuuqfwivdfmadf5mfggzbu3i
+  contract.py: bafybeiahktyss2eswqlncj6wcqdmd5e4kgixdgqpbjsxi2cnlyfahhclfe
 fingerprint_ignore_patterns: []
 class_name: MechMarketplaceContract
 contract_interface_paths:
@@ -19,4 +19,10 @@ dependencies:
     version: ==1.59.0
   web3:
     version: <7,>=6.0.0
+  eth-abi:
+    version: ==4.0.0
+  eth-utils:
+    version: ==2.2.0
+  hexbytes: {}
+  eth_typing: {}
 contracts: []
