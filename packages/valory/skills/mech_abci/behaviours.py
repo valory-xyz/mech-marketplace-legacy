@@ -56,4 +56,3 @@ class MechConsensusBehaviour(AbstractRoundBehaviour):
         *TransactionSettlementRoundBehaviour.behaviours,
         *UpdateSubscriptionRoundBehaviour.behaviours,
     }
-    # background_behaviours_cls = {BackgroundBehaviour}  # type: ignore
