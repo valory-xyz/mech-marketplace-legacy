@@ -29,7 +29,6 @@ from aea.crypto.base import LedgerApi
 from aea_ledger_ethereum import EthereumApi
 from eth_typing import ChecksumAddress
 from eth_utils import event_abi_to_log_topic
-from hexbytes import HexBytes
 from web3 import Web3
 from web3._utils.events import get_event_data
 from web3.types import BlockIdentifier, FilterParams, TxReceipt

@@ -7,7 +7,7 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeihscyr3poal6eyk6jeywtbdq552piwpbh2uo5h7bepjqdeivgiyem
-  behaviours.py: bafybeifrqnth46dr3tsiwqjz3fia3kq7jzupxfqhiqkvntekudvfjssiwe
+  behaviours.py: bafybeieysigot7y7q7qakkkqponjma55hviivizfqp7mi263edrdxhjnty
   composition.py: bafybeiaorp75iva5xgl4ebk3lg7oenqmd6wg2dxlm33oserb7aszyujml4
   dialogues.py: bafybeifhydd6xmstbh2jx5igj33upip5a3hhlcaxttfsc77heszqmru7ri
   fsm_specification.yaml: bafybeib5yne2ke3oc4amgehhn75vajexr3sedehdzmuabhyrovfqpmuipe
@@ -23,10 +23,9 @@ skills:
 - valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
 - valory/registration_abci:0.1.0:bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq
 - valory/reset_pause_abci:0.1.0:bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e
-- valory/task_submission_abci:0.1.0:bafybeiaqodszndaitmxchsqime6yzni6m36r5fifelazmtoe2p3ywweuq4
-- valory/termination_abci:0.1.0:bafybeifi2uodnrjsrivj53g3sjutocmyusbx6mlsb6oanqdyt2mfbyvusy
+- valory/task_submission_abci:0.1.0:bafybeichodqo6mavnjxiqezfwno7kpnbmiq3yzaxolzmrexew74cx5u6la
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
-- valory/subscription_abci:0.1.0:bafybeihdc5hobmiwxpduwmiuiiczhcbeiuwcdha4igjkb33nml43llljka
+- valory/subscription_abci:0.1.0:bafybeicfkvhp2woq6cguvzmgvbw6u3tzri4wylq4ouujkbsomwzn7mtr6e
 behaviours:
   main:
     args: {}
