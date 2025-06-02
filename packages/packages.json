@@ -62,7 +62,7 @@
         "connection/valory/p2p_libp2p_client/0.1.0": "bafybeid3xg5k2ol5adflqloy75ibgljmol6xsvzvezebsg7oudxeeolz7e",
         "connection/valory/http_server/0.22.0": "bafybeihpgu56ovmq4npazdbh6y6ru5i7zuv6wvdglpxavsckyih56smu7m",
         "skill/valory/contract_subscription/0.1.0": "bafybeiefuemlp75obgpxrp6iuleb3hn6vcviwh5oetk5djbuprf4xsmgjy",
-        "skill/valory/mech_abci/0.1.0": "bafybeihd7xajkwsxxhe3k5ipsyjqdc2s7eucya4thbrkedvo45hyya2nii",
+        "skill/valory/mech_abci/0.1.0": "bafybeihsq26y3zufa6w3hnl4zmz4wozelbzbosbkchel6bdwa4o4v3vkia",
         "skill/valory/task_submission_abci/0.1.0": "bafybeichodqo6mavnjxiqezfwno7kpnbmiq3yzaxolzmrexew74cx5u6la",
         "skill/valory/task_execution/0.1.0": "bafybeibsskbtgoct464fhwf64cgdhs7koa6os4xuz2leq4hycxif5eevcm",
         "skill/valory/websocket_client/0.1.0": "bafybeif7rrvsu6z4evqkhblxj3u6wwv2eqou576hgkyoehxuj7cntw7o2m",
@@ -72,8 +72,8 @@
         "skill/valory/reset_pause_abci/0.1.0": "bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e",
         "skill/valory/registration_abci/0.1.0": "bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq",
         "skill/valory/abstract_abci/0.1.0": "bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu",
-        "agent/valory/mech/0.1.0": "bafybeig6ymueyyuyc6lswyml7svebqxzldx5hgmo3hc4y6hm42sjsrt6ye",
-        "service/valory/mech/0.1.0": "bafybeigpjlolhxl6xaf6rrbykeonn7d4ajcglo4jenw65bx2s3bkcst7hq"
+        "agent/valory/mech/0.1.0": "bafybeic6lsnmdsoalxb4y2smvq3mazptknltj4yvqdni774xrmwy7moxee",
+        "service/valory/mech/0.1.0": "bafybeifkfcotcmv365sprxh3if6kk7zgo7cd3a7iy56dm3fr3utrrc7azu"
     },
     "third_party": {}
 }
