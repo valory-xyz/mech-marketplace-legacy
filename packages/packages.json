@@ -72,8 +72,8 @@
         "skill/valory/reset_pause_abci/0.1.0": "bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e",
         "skill/valory/registration_abci/0.1.0": "bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq",
         "skill/valory/abstract_abci/0.1.0": "bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu",
-        "agent/valory/mech/0.1.0": "bafybeic6lsnmdsoalxb4y2smvq3mazptknltj4yvqdni774xrmwy7moxee",
-        "service/valory/mech/0.1.0": "bafybeifkfcotcmv365sprxh3if6kk7zgo7cd3a7iy56dm3fr3utrrc7azu"
+        "agent/valory/mech/0.1.0": "bafybeicute5odw72wlu33ykg73ktf6muffewjuz52liq2i2hxs6c24i6iq",
+        "service/valory/mech/0.1.0": "bafybeiab5elxbjpkk5otgf6my3vpdvv4bbymwzgc4kaomagkqv5o2qmq6y"
     },
     "third_party": {}
 }
