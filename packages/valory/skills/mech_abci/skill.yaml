@@ -12,7 +12,7 @@ fingerprint:
   dialogues.py: bafybeifhydd6xmstbh2jx5igj33upip5a3hhlcaxttfsc77heszqmru7ri
   fsm_specification.yaml: bafybeib5yne2ke3oc4amgehhn75vajexr3sedehdzmuabhyrovfqpmuipe
   handlers.py: bafybeiczu4ygfo6bim3xtjufviijccpxrvspjybegpnya6bdpbqcyq2an4
-  models.py: bafybeicu2h6q5g5wysl3nlsgrtfnndwm65beaq4535l3b2tsdiksedblvy
+  models.py: bafybeic56cbxhe74c5ofklggmckbrvpy6d7ptwqhyhr3purn6xaqq2bcqq
 fingerprint_ignore_patterns: []
 connections:
 - valory/http_server:0.22.0:bafybeihpgu56ovmq4npazdbh6y6ru5i7zuv6wvdglpxavsckyih56smu7m
