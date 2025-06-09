@@ -40,6 +40,9 @@ from packages.valory.skills.task_submission_abci.rounds import (
 from packages.valory.skills.transaction_settlement_abci.rounds import (
     Event as TransactionSettlementEvent,
 )
+from packages.valory.skills.transaction_settlement_abci.models import (
+    TransactionParams
+)
 
 
 TaskExecutionParams = TaskExecutionAbciParams
@@ -85,7 +88,6 @@ class SharedState(TaskExecSharedState):
         MechAbciApp.event_to_timeout[
             TransactionSettlementEvent.ROUND_TIMEOUT
         ] = self.context.params.round_timeout_seconds
-
         MechAbciApp.event_to_timeout[
             TransactionSettlementEvent.VALIDATE_TIMEOUT
         ] = self.context.params.validate_timeout
@@ -99,5 +101,5 @@ class SharedState(TaskExecSharedState):
         )
 
 
-class Params(TaskExecutionParams, SubscriptionParams):  # type: ignore
+class Params(TaskExecutionParams, SubscriptionParams, TransactionParams):  # type: ignore
     """A model to represent params for multiple abci apps."""
