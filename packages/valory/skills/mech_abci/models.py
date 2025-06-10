@@ -37,11 +37,9 @@ from packages.valory.skills.task_submission_abci.models import (
 from packages.valory.skills.task_submission_abci.rounds import (
     Event as TaskExecutionEvent,
 )
+from packages.valory.skills.transaction_settlement_abci.models import TransactionParams
 from packages.valory.skills.transaction_settlement_abci.rounds import (
     Event as TransactionSettlementEvent,
-)
-from packages.valory.skills.transaction_settlement_abci.models import (
-    TransactionParams
 )
 
 
