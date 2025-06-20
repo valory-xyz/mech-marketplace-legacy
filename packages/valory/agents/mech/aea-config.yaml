@@ -39,12 +39,12 @@ skills:
 - valory/abstract_abci:0.1.0:bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu
 - valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
 - valory/contract_subscription:0.1.0:bafybeiefuemlp75obgpxrp6iuleb3hn6vcviwh5oetk5djbuprf4xsmgjy
-- valory/mech_abci:0.1.0:bafybeibaqkuvnaqmt7rugxwn5lrw3ir7lbrygxsa5hexwsizckvaoee43y
+- valory/mech_abci:0.1.0:bafybeiecbk2otdmahzbn6zr52p23pttg67nwkzewbrt6zcq7b4b3jdiz2u
 - valory/registration_abci:0.1.0:bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq
 - valory/reset_pause_abci:0.1.0:bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e
 - valory/subscription_abci:0.1.0:bafybeicfkvhp2woq6cguvzmgvbw6u3tzri4wylq4ouujkbsomwzn7mtr6e
-- valory/task_execution:0.1.0:bafybeibsskbtgoct464fhwf64cgdhs7koa6os4xuz2leq4hycxif5eevcm
-- valory/task_submission_abci:0.1.0:bafybeichodqo6mavnjxiqezfwno7kpnbmiq3yzaxolzmrexew74cx5u6la
+- valory/task_execution:0.1.0:bafybeiewx7qegikron5meqq3txpokszu5lbkss64earbuhansrytthfqge
+- valory/task_submission_abci:0.1.0:bafybeihjocpn3pfpzekmmhzorp6dnn4riaca4btgbrvo6prx6cxerv6kji
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
 - valory/websocket_client:0.1.0:bafybeif7rrvsu6z4evqkhblxj3u6wwv2eqou576hgkyoehxuj7cntw7o2m
 default_ledger: ethereum

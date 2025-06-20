@@ -1,0 +1,547 @@
+{
+    "name": "Autonolas Mech III",
+    "description": "The mech executes AI tasks requested on-chain and delivers the results to the requester.",
+    "inputFormat": "ipfs-v0.1",
+    "outputFormat": "ipfs-v0.1",
+    "image": "tbd",
+    "tools": [
+      "claude-prediction-offline",
+      "claude-prediction-online",
+      "deepmind-optimization",
+      "deepmind-optimization-strong",
+      "openai-gpt-3.5-turbo",
+      "openai-gpt-4",
+      "openai-text-davinci-002",
+      "openai-text-davinci-003",
+      "prediction-offline",
+      "prediction-offline-sme",
+      "prediction-online",
+      "prediction-online-sme",
+      "prediction-request-rag",
+      "prediction-request-reasoning",
+      "superforcaster"
+    ],
+    "toolMetadata": {
+      "claude-prediction-offline": {
+        "name": "Claude Prediction Offline",
+        "description": "Makes a prediction using Claude",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "The prompt used to make the prediction."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "claude-prediction-online": {
+        "name": "Claude Prediction Online",
+        "description": "Makes a prediction using Claude and online search",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "The prompt used to make the prediction."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "deepmind-optimization": {
+        "name": "Deepmind Optimization",
+        "description": "Makes a prediction using OpenAI gpt-3.5-turbo and online search. Works by optimizing the prompt to increase chances for a correct answer.",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "deepmind-optimization-strong": {
+        "name": "Deepmind Optimization",
+        "description": "Makes a prediction using OpenAI gpt-4 and online search. Works by optimizing the prompt to increase chances for a correct answer.",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "openai-gpt-3.5-turbo": {
+        "name": "OpenAI Request (GPT-3.5 Turbo)",
+        "description": "Performs a request to OpenAI's GPT-3.5 Turbo model.",
+        "input": {
+          "type": "text",
+          "description": "The request to relay to OpenAI's GPT-3.5 Turbo model."
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Response from OpenAI"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "User prompt to send to OpenAI"
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "openai-gpt-4": {
+        "name": "OpenAI Request (GPT-4)",
+        "description": "Performs a request to OpenAI's GPT-4 model.",
+        "input": {
+          "type": "text",
+          "description": "The request to relay to OpenAI's GPT-4 model."
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Response from OpenAI"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "User prompt to send to OpenAI"
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "openai-text-davinci-002": {
+        "name": "OpenAI Request (DaVinci002)",
+        "description": "Performs a request to OpenAI's DaVinci002 model.",
+        "input": {
+          "type": "text",
+          "description": "The request to relay to OpenAI's DaVinci002 model."
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Response from OpenAI"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "openai-text-davinci-003": {
+        "name": "OpenAI Request (DaVinci003)",
+        "description": "Performs a request to OpenAI's DaVinci003 model.",
+        "input": {
+          "type": "text",
+          "description": "The request to relay to OpenAI's DaVinci003 model."
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Response from OpenAI"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "prediction-offline": {
+        "name": "OpenAI Prediction Offline",
+        "description": "Makes a prediction using OpenAI GPT-3.5 Turbo",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "prediction-offline-sme": {
+        "name": "OpenAI Prediction Offline with Subject Matter Expert (SME)",
+        "description": "Makes a prediction using OpenAI GPT-3.5 Turbo and provides a SME based on the prompt.",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "prediction-online": {
+        "name": "OpenAI Prediction Online",
+        "description": "Makes a prediction using OpenAI GPT-3.5 Turbo. Uses data from searching the web.",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "prediction-online-sme": {
+        "name": "OpenAI Prediction Online with Subject Matter Expert (SME)",
+        "description": "Makes a prediction using OpenAI GPT-3.5 Turbo and provides a SME based on the prompt. Uses data from searching the web.",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "prediction-request-rag": {
+        "name": "Prediction Request RAG",
+        "description": "A tool for making binary predictions on markets using RAG.",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "prediction-request-reasoning": {
+        "name": "Prediction Request Reasoning",
+        "description": "A tool for making binary predictions on markets using RAG.",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      },
+      "superforcaster": {
+        "name": "SuperForecaster",
+        "description": "A tool for making binary predictions on markets using serper API and LLMs.",
+        "input": {
+          "type": "text",
+          "description": "The text to make a prediction on"
+        },
+        "output": {
+          "type": "object",
+          "description": "A JSON object containing the prediction and confidence",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "integer",
+                "description": "Unique identifier for the request"
+              },
+              "result": {
+                "type": "string",
+                "description": "Result information in JSON format as a string",
+                "example": "{\n  \"p_yes\": 0.6,\n  \"p_no\": 0.4,\n  \"confidence\": 0.8,\n  \"info_utility\": 0.6\n}"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt used for probability estimation."
+              }
+            },
+            "required": [
+              "requestId",
+              "result",
+              "prompt"
+            ]
+          }
+        }
+      }
+    }
+  }
