@@ -29,6 +29,10 @@ AI Mechs run on the [Gnosis chain](https://www.gnosis.io/), and enables you to p
 
 **AI Mechs is a project born at [ETHGlobal Lisbon](https://ethglobal.com/showcase/ai-mechs-dt36e).**
 
+## :gear: Current Service Hash: 
+`bafybeictx7b6e2bicffjtpzciavlenb6kdwh47645aqr2dmff3phpjj3fm`
+
+
 ## AI Mechs components
 
 The project consists of three components:
