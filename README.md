@@ -11,9 +11,6 @@
     </a>
 </h1>
 
-## :gear: Current Service Hash: 
-`bafybeictx7b6e2bicffjtpzciavlenb6kdwh47645aqr2dmff3phpjj3fm`
-
 The execution of AI tasks, such as image generation using DALL-E, prompt processing with ChatGPT, or more intricate operations involving on-chain transactions, poses a number of challenges, including:
 
 - Access to proprietary APIs, which may come with associated fees/subscriptions.
@@ -31,6 +28,10 @@ AI Mechs run on the [Gnosis chain](https://www.gnosis.io/), and enables you to p
 >   - **action-based** AI agents (e.g., AutoGPT, LangChain)
 
 **AI Mechs is a project born at [ETHGlobal Lisbon](https://ethglobal.com/showcase/ai-mechs-dt36e).**
+
+## :gear: Current Service Hash: 
+`bafybeictx7b6e2bicffjtpzciavlenb6kdwh47645aqr2dmff3phpjj3fm`
+
 
 ## AI Mechs components
 
