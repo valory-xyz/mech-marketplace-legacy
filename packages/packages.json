@@ -1,7 +1,6 @@
 {
     "dev": {
         "custom/valory/native_transfer_request/0.1.0": "bafybeifi2ojtjohfwy3qlvdsms5y7qa7iqbow7wq7gcjptgz2gbymve3vu",
-        "custom/valory/prediction_request_claude/0.1.0": "bafybeia74qg6simxsc5qdoi3brfu3slo3fjbkto4x2t4pv7hx4tyc7qrfa",
         "custom/valory/openai_request/0.1.0": "bafybeigz5brshryms5awq5zscxsxibjymdofm55dw5o6ud7gtwmodm3vmq",
         "custom/valory/prediction_request_embedding/0.1.0": "bafybeihtwykqnoxluqo2n4w2ccoh4xqoc6pifevol6obho3fneg7touzj4",
         "custom/valory/resolve_market/0.1.0": "bafybeidog2vsqmezxe63jqjpf7p6qmqy3opq3rppvihqtehf6k44hzyo74",
@@ -16,11 +15,7 @@
         "custom/napthaai/prediction_request_rag/0.1.0": "bafybeianz73tnhtmsuwnfucyivdd2sbkasp46ipiaw4zykuogzppkxjdcq",
         "custom/napthaai/prediction_request_reasoning/0.1.0": "bafybeie4vd6nwclpthkhar4oe7m567hben2qsdyc6knxcbd4yhlr3bbvym",
         "custom/valory/prepare_tx/0.1.0": "bafybeiggkqqyrj4n6qmtwgmx4r4qtrb2k6f67v42qyfgrgoow677vywgw4",
-        "custom/valory/short_maker/0.1.0": "bafybeif63rt4lkopu3rc3l7sg6tebrrwg2lxqufjx6dx4hoda5yzax43fa",
         "custom/napthaai/prediction_url_cot/0.1.0": "bafybeicdqi4udhqhtmlnk7mbmywlce4wnyj7vcpjhl7ffgmwhnyaqigdca",
-        "custom/napthaai/prediction_url_cot_claude/0.1.0": "bafybeicbjywni5hx5ssoiv6tnnjbqzsck6cmtsdpr6m562z6afogz5eh44",
-        "custom/napthaai/prediction_request_reasoning_claude/0.1.0": "bafybeihtx2cejxoy42jwk2i5m4evfzz537aic5njuawxnzdzwlo63kdduq",
-        "custom/napthaai/prediction_request_rag_claude/0.1.0": "bafybeickr32t7nmapuoymjyo3cf5rr2v2zapksxcivuqsgjr2gn6zo6y7y",
         "custom/napthaai/prediction_request_rag_cohere/0.1.0": "bafybeid56svuhz3w47lq4kpsl72gsc2h2y7fxmndjrieo2rwq2vac6n6hy",
         "custom/valory/prediction_request_lite/0.1.0": "bafybeibne6l4jmyuijqzs4gkrb3mi2iyy36fjj7apzs2kqheeu4ihgjm3y",
         "custom/nickcom007/prediction_request_sme_lite/0.1.0": "bafybeic3tjzls5iqs7mljdohwuu4cmuzf2warfxqr2htorbka4nivlbrbq",
@@ -62,9 +57,9 @@
         "connection/valory/p2p_libp2p_client/0.1.0": "bafybeid3xg5k2ol5adflqloy75ibgljmol6xsvzvezebsg7oudxeeolz7e",
         "connection/valory/http_server/0.22.0": "bafybeihpgu56ovmq4npazdbh6y6ru5i7zuv6wvdglpxavsckyih56smu7m",
         "skill/valory/contract_subscription/0.1.0": "bafybeiefuemlp75obgpxrp6iuleb3hn6vcviwh5oetk5djbuprf4xsmgjy",
-        "skill/valory/mech_abci/0.1.0": "bafybeid5ji7jpb4lbsyzec2bn6ay7g27r3u34vznqqqmf4dvonpxxcaiam",
-        "skill/valory/task_submission_abci/0.1.0": "bafybeibwkgecoo7zw62dageudssbhsda6rrnb2z4ubakrt3ck4pcf2h5ay",
-        "skill/valory/task_execution/0.1.0": "bafybeicuxwsphbduow4hn6xhvnmfe5yavpa54ftss5fitaf2glcexmyjym",
+        "skill/valory/mech_abci/0.1.0": "bafybeie2f72wto6fc6nkki74ltgumlmvhhgihaoqtoq65v6kkayaeounvi",
+        "skill/valory/task_submission_abci/0.1.0": "bafybeigupb2ruoywt6plvtokybjjghtct2zvqzsuahjvwk44bw6bfnpl3y",
+        "skill/valory/task_execution/0.1.0": "bafybeierpavmxqwju7x3gcybfoxqpuh2iyr5pcjlj3c44cwczjpeaikhfy",
         "skill/valory/websocket_client/0.1.0": "bafybeif7rrvsu6z4evqkhblxj3u6wwv2eqou576hgkyoehxuj7cntw7o2m",
         "skill/valory/subscription_abci/0.1.0": "bafybeicfkvhp2woq6cguvzmgvbw6u3tzri4wylq4ouujkbsomwzn7mtr6e",
         "skill/valory/transaction_settlement_abci/0.1.0": "bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy",
@@ -72,8 +67,8 @@
         "skill/valory/reset_pause_abci/0.1.0": "bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e",
         "skill/valory/registration_abci/0.1.0": "bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq",
         "skill/valory/abstract_abci/0.1.0": "bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu",
-        "agent/valory/mech/0.1.0": "bafybeihe7g2eqjpzmlh6i74exkpizisfuezljbslulkzwikr4nu25deqbm",
-        "service/valory/mech/0.1.0": "bafybeictx7b6e2bicffjtpzciavlenb6kdwh47645aqr2dmff3phpjj3fm"
+        "agent/valory/mech/0.1.0": "bafybeiaionerxsnk7te6efbgoz7v5es2hqpwt4wedntfwre4sm2v6bawja",
+        "service/valory/mech/0.1.0": "bafybeihnkkxdats6snd6urefonfviu43sn55xbptpmzk5vluhxtxwa6v2u"
     },
     "third_party": {}
 }
