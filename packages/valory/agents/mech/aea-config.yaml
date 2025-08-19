@@ -39,12 +39,12 @@ skills:
 - valory/abstract_abci:0.1.0:bafybeieo7pe5wqjphs5izpz5aujjbubymlxub62b3rhx6yglu65ibalffu
 - valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
 - valory/contract_subscription:0.1.0:bafybeiefuemlp75obgpxrp6iuleb3hn6vcviwh5oetk5djbuprf4xsmgjy
-- valory/mech_abci:0.1.0:bafybeie2f72wto6fc6nkki74ltgumlmvhhgihaoqtoq65v6kkayaeounvi
+- valory/mech_abci:0.1.0:bafybeibybmv7fo3gahc7z5y7jrnd7o64kzplhvgvmdb6qbiqatnedhm4le
 - valory/registration_abci:0.1.0:bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq
 - valory/reset_pause_abci:0.1.0:bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e
 - valory/subscription_abci:0.1.0:bafybeicfkvhp2woq6cguvzmgvbw6u3tzri4wylq4ouujkbsomwzn7mtr6e
 - valory/task_execution:0.1.0:bafybeierpavmxqwju7x3gcybfoxqpuh2iyr5pcjlj3c44cwczjpeaikhfy
-- valory/task_submission_abci:0.1.0:bafybeigupb2ruoywt6plvtokybjjghtct2zvqzsuahjvwk44bw6bfnpl3y
+- valory/task_submission_abci:0.1.0:bafybeihcwjw5t2hzoak4dl57sbrryuorofgc66cxduons33v5in2t2vmbm
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
 - valory/websocket_client:0.1.0:bafybeif7rrvsu6z4evqkhblxj3u6wwv2eqou576hgkyoehxuj7cntw7o2m
 default_ledger: ethereum
@@ -225,7 +225,7 @@ models:
         max_priority_fee_per_gas: 2000000000
       init_fallback_gas: ${int:500000}
       manual_gas_limit: ${int:1000000}
-      service_owner_share: ${float:0.1}
+      service_owner_share: ${int:1000}
       profit_split_freq: ${int:1}
       agent_funding_amount: ${int:200000000000000000}
       minimum_agent_balance: ${int:100000000000000000}

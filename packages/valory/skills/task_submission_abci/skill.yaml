@@ -8,11 +8,11 @@ license: Apache-2.0
 aea_version: '>=1.0.0, <2.0.0'
 fingerprint:
   __init__.py: bafybeiholqak7ltw6bbmn2c5tn3j7xgzkdlfzp3kcskiqsvmxoih6m4muq
-  behaviours.py: bafybeict42xgnpphqh7xh75y6wbkov7lznj5hwhng6k3wpxhuu6nqgcgka
+  behaviours.py: bafybeigo233nukunrsq6chbmkkxphf2ootp7qfm42ka4yoxc5r7v6d6ciq
   dialogues.py: bafybeibmac3m5u5h6ucoyjr4dazay72dyga656wvjl6z6saapluvjo54ne
   fsm_specification.yaml: bafybeidtmsmpunr3t77pshd3k2s6dd6hlvhze6inu3gj7xyvlg4wi3tnuu
   handlers.py: bafybeibe5n7my2vd2wlwo73sbma65epjqc7kxgtittewlylcmvnmoxtxzq
-  models.py: bafybeiauw3woy7wa5iejlddq3avwoyauchir4a27uejbnwg33iy7zk4rsm
+  models.py: bafybeiccxzj7ywf6ncyquthbbo7465hsiotlobkhjiwmpctgmcwvlyj3gy
   payloads.py: bafybeia2yorri2u5rwh6vukb6iwdrbn53ygsuuhthns2txptvjipyb6f4e
   rounds.py: bafybeifdphyrcyz6rsl7hboufbkem36znsc7wjzd6qv5djxwmgbj2htz2y
   tasks.py: bafybeicu5t5cvfhbndgpxbbtmp4vbmtyb6fba6vsnlewftvuderxp5lwcy
@@ -145,7 +145,7 @@ models:
       use_termination: false
       validate_timeout: 1205
       use_slashing: false
-      service_owner_share: 0.1
+      service_owner_share: 1000
       profit_split_freq: 1000
       slash_cooldown_hours: 3
       agent_funding_amount: 200000000000000000

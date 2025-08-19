@@ -7,7 +7,7 @@ license: Apache-2.0
 fingerprint:
   README.md: bafybeif7ia4jdlazy6745ke2k2x5yoqlwsgwr6sbztbgqtwvs3ndm2p7ba
 fingerprint_ignore_patterns: []
-agent: valory/mech:0.1.0:bafybeiaionerxsnk7te6efbgoz7v5es2hqpwt4wedntfwre4sm2v6bawja
+agent: valory/mech:0.1.0:bafybeiagduwjci574wi5en4wmz6v2iwx4hgowf2bukz4pcsjkzgawepmwy
 number_of_agents: 4
 deployment:
   agent:
@@ -65,7 +65,7 @@ type: skill
         agent_funding_amount: ${AGENT_FUNDING_AMOUNT:int:200000000000000000}
         minimum_agent_balance: ${MINIMUM_AGENT_BALANCE:int:100000000000000000}
         mech_staking_instance_address: ${MECH_STAKING_INSTANCE_ADDRESS:str:0x0000000000000000000000000000000000000000}
-        service_owner_share: ${SERVICE_SHARE:float:0}
+        service_owner_share: ${SERVICE_SHARE:int:0}
 1:
   models:
     params:
@@ -105,7 +105,7 @@ type: skill
         mech_marketplace_address: ${MECH_MARKETPLACE_ADDRESS:str:0x0000000000000000000000000000000000000000}
         minimum_agent_balance: ${MINIMUM_AGENT_BALANCE:int:100000000000000000}
         mech_staking_instance_address: ${MECH_STAKING_INSTANCE_ADDRESS:str:0x0000000000000000000000000000000000000000}
-        service_owner_share: ${SERVICE_SHARE:float:0}
+        service_owner_share: ${SERVICE_SHARE:int:0}
 2:
   models:
     params:
@@ -145,7 +145,7 @@ type: skill
         agent_funding_amount: ${AGENT_FUNDING_AMOUNT:int:200000000000000000}
         minimum_agent_balance: ${MINIMUM_AGENT_BALANCE:int:100000000000000000}
         mech_staking_instance_address: ${MECH_STAKING_INSTANCE_ADDRESS:str:0x0000000000000000000000000000000000000000}
-        service_owner_share: ${SERVICE_SHARE:float:0}
+        service_owner_share: ${SERVICE_SHARE:int:0}
 3:
   models:
     params:
@@ -185,7 +185,7 @@ type: skill
         agent_funding_amount: ${AGENT_FUNDING_AMOUNT:int:200000000000000000}
         minimum_agent_balance: ${MINIMUM_AGENT_BALANCE:int:100000000000000000}
         mech_staking_instance_address: ${MECH_STAKING_INSTANCE_ADDRESS:str:0x0000000000000000000000000000000000000000}
-        service_owner_share: ${SERVICE_SHARE:float:0}
+        service_owner_share: ${SERVICE_SHARE:int:0}
 ---
 public_id: valory/task_execution:0.1.0
 type: skill
