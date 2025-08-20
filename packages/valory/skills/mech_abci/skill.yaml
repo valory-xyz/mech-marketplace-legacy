@@ -25,7 +25,7 @@ skills:
 - valory/reset_pause_abci:0.1.0:bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e
 - valory/task_submission_abci:0.1.0:bafybeihcwjw5t2hzoak4dl57sbrryuorofgc66cxduons33v5in2t2vmbm
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
-- valory/subscription_abci:0.1.0:bafybeicfkvhp2woq6cguvzmgvbw6u3tzri4wylq4ouujkbsomwzn7mtr6e
+- valory/subscription_abci:0.1.0:bafybeiffgxfs7sonbncc64bz3wzwcbvw52mf66rkbluhcdosedbjplcgci
 behaviours:
   main:
     args: {}
@@ -155,7 +155,7 @@ models:
       slash_threshold_amount: 10000000000000000
       termination_from_block: 0
       light_slash_unit_amount: 5000000000000000
-      service_owner_share: 0.1
+      service_owner_share: 1000
       profit_split_freq: 100
       serious_slash_unit_amount: 8000000000000000
       agent_funding_amount: 200000000000000000
