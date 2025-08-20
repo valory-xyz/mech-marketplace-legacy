@@ -472,7 +472,7 @@ class FundsSplittingBehaviour(DeliverBehaviour, ABC):
             # if it's the case that the required amount for the agents is greater than the profits
             # split all the funds among the agent, proportional to their intended funding amount
             for agent, amount in agent_funding_amounts.items():
-                agent_share = int((amount / total_required_amount_for_agents) * profits)
+                agent_share = (amount * profits) // total_required_amount_for_agents
                 funds_by_address[agent] = agent_share
 
             # return here because we don't have any funds left to split
@@ -482,7 +482,7 @@ class FundsSplittingBehaviour(DeliverBehaviour, ABC):
         # split the rest among the service owner and the operator
         profits = profits - total_required_amount_for_agents
 
-        service_owner_share = int(self.params.service_owner_share * profits)
+        service_owner_share = (profits * self.params.service_owner_share) // 10_000
         funds_by_address[service_owner] = service_owner_share
         operator_share = profits - service_owner_share
         funds_by_operator = yield from self._get_funds_by_operator(operator_share)
@@ -586,9 +586,8 @@ class FundsSplittingBehaviour(DeliverBehaviour, ABC):
         total_reqs -= invalid_operator_reqs
 
         for agent, reqs in accumulated_reqs_by_operator.items():
-            accumulated_reqs_by_operator[agent] = int(
-                operator_share * (reqs / total_reqs)
-            )
+            share = (operator_share * reqs) // total_reqs
+            accumulated_reqs_by_operator[agent] = share
 
         return accumulated_reqs_by_operator
 
