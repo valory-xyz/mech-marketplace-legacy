@@ -361,19 +361,35 @@ class FundsSplittingBehaviour(DeliverBehaviour, ABC):
         """
         Returns true if profits from the mech should be split.
 
-        Profits will be split based on the number of requests that have been delivered.
-        I.e. We will be splitting every n-th request. Where, n- is configurable
+        Profits will be split based on the mech balance.
+        I.e. We will be splitting if there is more than n balance. Where, n- is configurable
 
         :returns: True if profits should be split, False otherwise.
         :yields: None
         """
-        total_reqs = yield from self._get_num_requests_delivered()
-        if total_reqs is None:
+        # If any agent is under min, run the split now (best-effort).
+        deficits = yield from self._get_agent_funding_amounts()
+        if deficits and sum(deficits.values()) > 0:
+            self.context.logger.info(f"Found deficits: {deficits}.")
+            return True
+
+        agent_balances_dict = yield from self._get_agent_balances()
+        if agent_balances_dict is None:
             self.context.logger.warning(
-                "Could not get number of requests delivered. Don't split profits."
+                "Could not get agent balances. Don't split profits."
             )
             return False
-        return total_reqs % self.params.profit_split_freq == 0
+
+        self.context.logger.info(f"Total agent balances dict: {agent_balances_dict}")
+
+        agent_balances = sum(
+            value for value in agent_balances_dict.values() if isinstance(value, int)
+        )
+        self.context.logger.info(f"Total agent balances: {agent_balances}")
+        self.context.logger.info(
+            f"Profit split balance: {self.params.profit_split_balance}"
+        )
+        return agent_balances >= self.params.profit_split_balance
 
     def get_split_profit_txs(
         self,
