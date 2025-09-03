@@ -50,6 +50,7 @@ keys.json
 leak_report
 
 agent/
+mech/
 backup_mech/
 /pip
 /tool_test.py
