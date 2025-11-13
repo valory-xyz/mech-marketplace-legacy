@@ -73,6 +73,7 @@ LAST_SUCCESSFUL_EXECUTED_TASK = "last_successful_executed_task"
 WAS_LAST_READ_SUCCESSFUL = "was_last_read_successful"
 LAST_TX = "last_tx"
 PENDING_TASKS = "pending_tasks"
+GRACE_PERIOD = 300  # 5 min
 
 
 class HttpCode(Enum):
@@ -342,20 +343,19 @@ class HttpHandler(BaseHttpHandler):
             ]
 
         # ensure we are delivering
-        grace_period = 300  # 5 min
         last_executed_task = (
             self.last_successful_executed_task[1]
             if self.last_successful_executed_task
-            else time.time() - grace_period * 2
+            else time.time() - GRACE_PERIOD * 2
         )
         last_tx_made = self.last_tx[1] if self.last_tx else time.time()
-        we_are_delivering = last_executed_task < last_tx_made + grace_period
+        we_are_delivering = last_executed_task < last_tx_made + GRACE_PERIOD
 
         # ensure we can get new reqs
         last_successful_read = (
             self.last_successful_read[1] if self.last_successful_read else time.time()
         )
-        we_can_get_new_reqs = last_successful_read > time.time() - grace_period
+        we_can_get_new_reqs = last_successful_read > time.time() - GRACE_PERIOD
 
         error = ""
         if not we_are_delivering:
