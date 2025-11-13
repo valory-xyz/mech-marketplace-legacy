@@ -342,7 +342,7 @@ class HttpHandler(BaseHttpHandler):
             ]
 
         # ensure we are delivering
-        grace_period = self.context.params.polling_interval * 10
+        grace_period = 300  # 5 min
         last_executed_task = (
             self.last_successful_executed_task[1]
             if self.last_successful_executed_task
@@ -383,6 +383,7 @@ class HttpHandler(BaseHttpHandler):
             "current_round": current_round,
             "previous_rounds": previous_rounds,
             "is_transitioning_fast": is_transitioning_fast,
+            "is_healthy": (we_are_delivering and we_can_get_new_reqs),
             "last_successful_read": (
                 {
                     "block_number": self.last_successful_read[0],
@@ -409,7 +410,6 @@ class HttpHandler(BaseHttpHandler):
                 else None
             ),
             "queue_size": len(self.context.shared_state.get(PENDING_TASKS, [])),
-            "is_ok": (we_are_delivering and we_can_get_new_reqs),
             "error": error,
         }
 
