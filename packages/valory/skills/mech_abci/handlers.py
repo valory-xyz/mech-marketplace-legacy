@@ -77,6 +77,8 @@ LIVENESS_STALL_FACTOR = 3.0  # allow up to 3× reset_pause before calling it "st
 LAST_TX = "last_tx"
 PENDING_TASKS = "pending_tasks"
 GRACE_PERIOD = 300  # 5 min
+LAST_READ_ATTEMPT_TS = "last_read_attempt_ts"
+INFLIGHT_READ_TS = "inflight_read_ts"
 
 
 class HttpCode(Enum):
@@ -125,6 +127,16 @@ class HttpHandler(BaseHttpHandler):
     def last_tx(self) -> Optional[Tuple[str, float]]:
         """Get the last transaction."""
         return cast(Optional[Tuple[str, float]], self.context.shared_state.get(LAST_TX))
+
+    @property
+    def last_attempt_ts(self) -> Optional[float]:
+        return cast(
+            Optional[float], self.context.shared_state.get(LAST_READ_ATTEMPT_TS)
+        )
+
+    @property
+    def inflight_ts(self) -> Optional[float]:
+        return cast(Optional[float], self.context.shared_state.get(INFLIGHT_READ_TS))
 
     def setup(self) -> None:
         """Implement the setup."""
@@ -388,13 +400,30 @@ class HttpHandler(BaseHttpHandler):
             )
 
         # -------- Readiness (idle OK; with backlog require fresh read)
+        def _max_ts(*vals: Optional[float]) -> Optional[float]:
+            present = [v for v in vals if v is not None]
+            return max(present) if present else None
+
+        last_dependency_heartbeat_ts = _max_ts(
+            last_successful_read_ts, self.last_attempt_ts
+        )
+        is_dependency_heartbeat_recent = bool(
+            last_dependency_heartbeat_ts
+            and (now - last_dependency_heartbeat_ts) <= grace
+        )
+        inflight_recent = bool(
+            self.inflight_ts and (now - self.inflight_ts) <= min(grace, 2 * reset_pause)
+        )
+
         if not expected_work:
             readiness_ok, ready_reason = True, "idle-ok"
-        elif last_successful_read_ts is None:
-            readiness_ok, ready_reason = False, "no-read-yet"
         else:
-            readiness_ok = (now - last_successful_read_ts) <= grace
-            ready_reason = "deps-ok" if readiness_ok else "stale-read"
+            if is_dependency_heartbeat_recent or inflight_recent:
+                readiness_ok, ready_reason = True, (
+                    "deps-ok" if is_dependency_heartbeat_recent else "deps-inflight"
+                )
+            else:
+                readiness_ok, ready_reason = False, "stale-read"
 
         # -------- Progress (with backlog: timely FSM or recent execution)
         if expected_work:
