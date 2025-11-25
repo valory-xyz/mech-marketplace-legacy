@@ -71,9 +71,9 @@ IpfsHandler = BaseIpfsHandler
 LAST_SUCCESSFUL_READ = "last_successful_read"
 LAST_SUCCESSFUL_EXECUTED_TASK = "last_successful_executed_task"
 WAS_LAST_READ_SUCCESSFUL = "was_last_read_successful"
-DEFAULT_GRACE = 60.0                  # readiness/progress grace; tune if needed
-TRANSITION_TOLERANCE_FACTOR = 2.0     # allow up to 2× reset_pause before calling it "slow"
-LIVENESS_STALL_FACTOR       = 3.0     # allow up to 3× reset_pause before calling it "stuck"
+DEFAULT_GRACE = 60.0  # readiness/progress grace; tune if needed
+TRANSITION_TOLERANCE_FACTOR = 2.0  # allow up to 2× reset_pause before calling it "slow"
+LIVENESS_STALL_FACTOR = 3.0  # allow up to 3× reset_pause before calling it "stuck"
 LAST_TX = "last_tx"
 PENDING_TASKS = "pending_tasks"
 GRACE_PERIOD = 300  # 5 min
@@ -306,7 +306,9 @@ class HttpHandler(BaseHttpHandler):
         self.context.logger.info("Responding with: {}".format(http_response))
         self.context.outbox.put_message(message=http_response)
 
-    def _handle_get_health(self, http_msg: HttpMessage, http_dialogue: HttpDialogue) -> None:
+    def _handle_get_health(
+        self, http_msg: HttpMessage, http_dialogue: HttpDialogue
+    ) -> None:
         """
         Handle GET /healthcheck (old marketplace) and compute the agent's health.
 
@@ -328,24 +330,30 @@ class HttpHandler(BaseHttpHandler):
         round_sequence = cast(BaseSharedState, self.context.state).round_sequence
 
         if round_sequence._last_round_transition_timestamp:
-            is_tm_unhealthy = cast(BaseSharedState, self.context.state).round_sequence.block_stall_deadline_expired
+            is_tm_unhealthy = cast(
+                BaseSharedState, self.context.state
+            ).round_sequence.block_stall_deadline_expired
             now_wall = datetime.now().timestamp()
             seconds_since_last_transition = now_wall - datetime.timestamp(
                 round_sequence._last_round_transition_timestamp
             )
             is_transitioning_fast = (
-                    (is_tm_unhealthy is False)
-                    and seconds_since_last_transition
-                    < TRANSITION_TOLERANCE_FACTOR * self.context.params.reset_pause_duration
+                (is_tm_unhealthy is False)
+                and seconds_since_last_transition
+                < TRANSITION_TOLERANCE_FACTOR * self.context.params.reset_pause_duration
             )
 
         if round_sequence._abci_app:
             current_round = round_sequence._abci_app.current_round.round_id
-            previous_rounds = [r.round_id for r in round_sequence._abci_app._previous_rounds[-10:]]
+            previous_rounds = [
+                r.round_id for r in round_sequence._abci_app._previous_rounds[-10:]
+            ]
 
         # -------- Observations from shared state (epoch seconds)
         last_executed_task_ts: Optional[float] = (
-            self.last_successful_executed_task[1] if self.last_successful_executed_task else None
+            self.last_successful_executed_task[1]
+            if self.last_successful_executed_task
+            else None
         )
         last_successful_read_ts: Optional[float] = (
             self.last_successful_read[1] if self.last_successful_read else None
@@ -371,9 +379,13 @@ class HttpHandler(BaseHttpHandler):
             liveness_ok, live_reason = False, "no-fsm-data"
         else:
             liveness_ok = (not is_tm_unhealthy) and (
-                    seconds_since_last_transition <= LIVENESS_STALL_FACTOR * reset_pause
+                seconds_since_last_transition <= LIVENESS_STALL_FACTOR * reset_pause
             )
-            live_reason = "ok" if liveness_ok else ("tm-unhealthy" if is_tm_unhealthy else "stuck-no-transition")
+            live_reason = (
+                "ok"
+                if liveness_ok
+                else ("tm-unhealthy" if is_tm_unhealthy else "stuck-no-transition")
+            )
 
         # -------- Readiness (idle OK; with backlog require fresh read)
         if not expected_work:
@@ -388,15 +400,16 @@ class HttpHandler(BaseHttpHandler):
         if expected_work:
             if last_executed_task_ts is None:
                 progress_ok = (
-                        seconds_since_last_transition is not None
-                        and seconds_since_last_transition <= TRANSITION_TOLERANCE_FACTOR * reset_pause
+                    seconds_since_last_transition is not None
+                    and seconds_since_last_transition
+                    <= TRANSITION_TOLERANCE_FACTOR * reset_pause
                 )
             else:
                 progress_ok = (
-                        (seconds_since_last_transition is not None
-                         and seconds_since_last_transition <= TRANSITION_TOLERANCE_FACTOR * reset_pause)
-                        or ((now - last_executed_task_ts) <= grace)
-                )
+                    seconds_since_last_transition is not None
+                    and seconds_since_last_transition
+                    <= TRANSITION_TOLERANCE_FACTOR * reset_pause
+                ) or ((now - last_executed_task_ts) <= grace)
             prog_reason = "progress" if progress_ok else "no-progress-with-backlog"
         else:
             progress_ok, prog_reason = True, "idle-ok"
@@ -424,21 +437,28 @@ class HttpHandler(BaseHttpHandler):
             "previous_rounds": previous_rounds,
             "is_transitioning_fast": is_transitioning_fast,
             "last_successful_read": (
-                {"block_number": self.last_successful_read[0], "timestamp": self.last_successful_read[1]}
-                if self.last_successful_read else None
+                {
+                    "block_number": self.last_successful_read[0],
+                    "timestamp": self.last_successful_read[1],
+                }
+                if self.last_successful_read
+                else None
             ),
             "last_successful_executed_task": (
-                {"request_id": self.last_successful_executed_task[0],
-                 "timestamp": self.last_successful_executed_task[1]}
-                if self.last_successful_executed_task else None
+                {
+                    "request_id": self.last_successful_executed_task[0],
+                    "timestamp": self.last_successful_executed_task[1],
+                }
+                if self.last_successful_executed_task
+                else None
             ),
             # Note: last_tx is not used for health decisions; include only if you want it for observability.
             "last_tx": (
                 {"tx_hash": self.last_tx[0], "timestamp": self.last_tx[1]}
-                if self.last_tx else None
+                if self.last_tx
+                else None
             ),
             "health_version": 2,
         }
 
         self._send_ok_response(http_msg, http_dialogue, data)
-
