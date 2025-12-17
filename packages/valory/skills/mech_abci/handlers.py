@@ -71,9 +71,14 @@ IpfsHandler = BaseIpfsHandler
 LAST_SUCCESSFUL_READ = "last_successful_read"
 LAST_SUCCESSFUL_EXECUTED_TASK = "last_successful_executed_task"
 WAS_LAST_READ_SUCCESSFUL = "was_last_read_successful"
+DEFAULT_GRACE = 60.0  # readiness/progress grace; tune if needed
+TRANSITION_TOLERANCE_FACTOR = 2.0  # allow up to 2× reset_pause before calling it "slow"
+LIVENESS_STALL_FACTOR = 3.0  # allow up to 3× reset_pause before calling it "stuck"
 LAST_TX = "last_tx"
 PENDING_TASKS = "pending_tasks"
 GRACE_PERIOD = 300  # 5 min
+LAST_READ_ATTEMPT_TS = "last_read_attempt_ts"
+INFLIGHT_READ_TS = "inflight_read_ts"
 
 
 class HttpCode(Enum):
@@ -122,6 +127,16 @@ class HttpHandler(BaseHttpHandler):
     def last_tx(self) -> Optional[Tuple[str, float]]:
         """Get the last transaction."""
         return cast(Optional[Tuple[str, float]], self.context.shared_state.get(LAST_TX))
+
+    @property
+    def last_attempt_ts(self) -> Optional[float]:
+        return cast(
+            Optional[float], self.context.shared_state.get(LAST_READ_ATTEMPT_TS)
+        )
+
+    @property
+    def inflight_ts(self) -> Optional[float]:
+        return cast(Optional[float], self.context.shared_state.get(INFLIGHT_READ_TS))
 
     def setup(self) -> None:
         """Implement the setup."""
@@ -307,16 +322,22 @@ class HttpHandler(BaseHttpHandler):
         self, http_msg: HttpMessage, http_dialogue: HttpDialogue
     ) -> None:
         """
-        Handle a Http request of verb GET.
+        Handle GET /healthcheck (old marketplace) and compute the agent's health.
 
-        :param http_msg: the http message
-        :param http_dialogue: the http dialogue
+        Health dimensions:
+          - Liveness: FSM is transitioning and Tendermint isn't stalled.
+          - Readiness: Can accept work now. Idle → ready. If backlog exists, require a fresh read.
+          - Progress: If backlog exists, either FSM transitions are timely or a task executed recently.
+
+        Overall: is_healthy = liveness_ok AND readiness_ok AND progress_ok.
         """
-        seconds_since_last_transition = None
-        is_tm_unhealthy = None
-        is_transitioning_fast = None
-        current_round = None
-        previous_rounds = None
+
+        # -------- FSM / rounds (observability + liveness/progress inputs)
+        seconds_since_last_transition: Optional[float] = None
+        is_tm_unhealthy: Optional[bool] = None
+        is_transitioning_fast: Optional[bool] = None
+        current_round: Optional[str] = None
+        previous_rounds: Optional[List[str]] = None
 
         round_sequence = cast(BaseSharedState, self.context.state).round_sequence
 
@@ -324,16 +345,14 @@ class HttpHandler(BaseHttpHandler):
             is_tm_unhealthy = cast(
                 BaseSharedState, self.context.state
             ).round_sequence.block_stall_deadline_expired
-
-            current_time = datetime.now().timestamp()
-            seconds_since_last_transition = current_time - datetime.timestamp(
+            now_wall = datetime.now().timestamp()
+            seconds_since_last_transition = now_wall - datetime.timestamp(
                 round_sequence._last_round_transition_timestamp
             )
-
             is_transitioning_fast = (
-                not is_tm_unhealthy
+                (is_tm_unhealthy is False)
                 and seconds_since_last_transition
-                < 2 * self.context.params.reset_pause_duration
+                < TRANSITION_TOLERANCE_FACTOR * self.context.params.reset_pause_duration
             )
 
         if round_sequence._abci_app:
@@ -342,48 +361,110 @@ class HttpHandler(BaseHttpHandler):
                 r.round_id for r in round_sequence._abci_app._previous_rounds[-10:]
             ]
 
-        # ensure we are delivering
-        last_executed_task = (
+        # -------- Observations from shared state (epoch seconds)
+        last_executed_task_ts: Optional[float] = (
             self.last_successful_executed_task[1]
             if self.last_successful_executed_task
-            else time.time() - GRACE_PERIOD * 2
+            else None
         )
-        last_tx_made = self.last_tx[1] if self.last_tx else time.time()
-        we_are_delivering = last_executed_task < last_tx_made + GRACE_PERIOD
-
-        # ensure we can get new reqs
-        last_successful_read = (
-            self.last_successful_read[1] if self.last_successful_read else time.time()
+        last_successful_read_ts: Optional[float] = (
+            self.last_successful_read[1] if self.last_successful_read else None
         )
-        we_can_get_new_reqs = last_successful_read > time.time() - GRACE_PERIOD
 
-        error = ""
-        if not we_are_delivering:
-            error = (
-                f"The service is failing to deliver responses. "
-                f"Last executed task was at {last_executed_task} and last tx was at {last_tx_made}. "
-                f"Potential reasons this could happen:\n"
-                f"- RPC Issues. Make sure the RPC is working properly, and there are no reverting txs due to GS026.\n"
-                f"- One of the agents has not enough funds to make a tx. Make sure all agents have enough funds. \n"
+        # -------- Backlog awareness (only PENDING_TASKS for old marketplace)
+        pending_val = self.context.shared_state.get(PENDING_TASKS)
+        try:
+            backlog_size = len(pending_val) if pending_val is not None else 0
+        except Exception:
+            backlog_size = 0
+        expected_work = backlog_size > 0
+
+        # -------- Thresholds & clocks
+        reset_pause = float(self.context.params.reset_pause_duration)
+        # More stable than tying to txs: base grace on pause + a sane floor.
+        # You can also make it max(3*polling_interval, DEFAULT_GRACE) if you prefer.
+        grace = max(2 * reset_pause, DEFAULT_GRACE)
+        now = time.time()
+
+        # -------- Liveness (FSM moving & Tendermint not stalled)
+        if seconds_since_last_transition is None or is_tm_unhealthy is None:
+            liveness_ok, live_reason = False, "no-fsm-data"
+        else:
+            liveness_ok = (not is_tm_unhealthy) and (
+                seconds_since_last_transition <= LIVENESS_STALL_FACTOR * reset_pause
+            )
+            live_reason = (
+                "ok"
+                if liveness_ok
+                else ("tm-unhealthy" if is_tm_unhealthy else "stuck-no-transition")
             )
 
-        if not we_can_get_new_reqs:
-            error = (
-                f"The service is failing to get new requests. "
-                f"Last successful read was at {last_successful_read}. "
-                f"This is likely happening becuase the service cannot get new requests from the ledger. "
-                f"Make sure the RPC is working properly."
-            )
+        # -------- Readiness (idle OK; with backlog require fresh read)
+        def _max_ts(*vals: Optional[float]) -> Optional[float]:
+            present = [v for v in vals if v is not None]
+            return max(present) if present else None
 
+        last_dependency_heartbeat_ts = _max_ts(
+            last_successful_read_ts, self.last_attempt_ts
+        )
+        is_dependency_heartbeat_recent = bool(
+            last_dependency_heartbeat_ts
+            and (now - last_dependency_heartbeat_ts) <= grace
+        )
+        inflight_recent = bool(
+            self.inflight_ts and (now - self.inflight_ts) <= min(grace, 2 * reset_pause)
+        )
+
+        if not expected_work:
+            readiness_ok, ready_reason = True, "idle-ok"
+        else:
+            if is_dependency_heartbeat_recent or inflight_recent:
+                readiness_ok, ready_reason = True, (
+                    "deps-ok" if is_dependency_heartbeat_recent else "deps-inflight"
+                )
+            else:
+                readiness_ok, ready_reason = False, "stale-read"
+
+        # -------- Progress (with backlog: timely FSM or recent execution)
+        if expected_work:
+            if last_executed_task_ts is None:
+                progress_ok = (
+                    seconds_since_last_transition is not None
+                    and seconds_since_last_transition
+                    <= TRANSITION_TOLERANCE_FACTOR * reset_pause
+                )
+            else:
+                progress_ok = (
+                    seconds_since_last_transition is not None
+                    and seconds_since_last_transition
+                    <= TRANSITION_TOLERANCE_FACTOR * reset_pause
+                ) or ((now - last_executed_task_ts) <= grace)
+            prog_reason = "progress" if progress_ok else "no-progress-with-backlog"
+        else:
+            progress_ok, prog_reason = True, "idle-ok"
+
+        # -------- Canonical health flag
+        is_healthy = bool(liveness_ok and readiness_ok and progress_ok)
+
+        # -------- Response payload
         data = {
+            "is_healthy": is_healthy,
+            "liveness": {"ok": liveness_ok, "reason": live_reason},
+            "readiness": {"ok": readiness_ok, "reason": ready_reason},
+            "progress": {
+                "ok": progress_ok,
+                "reason": prog_reason,
+                "backlog_size": backlog_size,
+                "expected_work": expected_work,
+            },
             "seconds_since_last_transition": seconds_since_last_transition,
-            "is_tm_healthy": not is_tm_unhealthy,
+            # Three-state for observability: True (healthy), False (unhealthy), None (unknown/no data)
+            "is_tm_healthy": (None if is_tm_unhealthy is None else not is_tm_unhealthy),
             "period": self.synchronized_data.period_count,
-            "reset_pause_duration": self.context.params.reset_pause_duration,
+            "reset_pause_duration": reset_pause,
             "current_round": current_round,
             "previous_rounds": previous_rounds,
             "is_transitioning_fast": is_transitioning_fast,
-            "is_healthy": (we_are_delivering and we_can_get_new_reqs),
             "last_successful_read": (
                 {
                     "block_number": self.last_successful_read[0],
@@ -400,17 +481,13 @@ class HttpHandler(BaseHttpHandler):
                 if self.last_successful_executed_task
                 else None
             ),
-            "was_last_read_successful": self.was_last_read_successful,
+            # Note: last_tx is not used for health decisions; include only if you want it for observability.
             "last_tx": (
-                {
-                    "tx_hash": self.last_tx[0],
-                    "timestamp": self.last_tx[1],
-                }
+                {"tx_hash": self.last_tx[0], "timestamp": self.last_tx[1]}
                 if self.last_tx
                 else None
             ),
-            "queue_size": len(self.context.shared_state.get(PENDING_TASKS, [])),
-            "error": error,
+            "health_version": 2,
         }
 
         self._send_ok_response(http_msg, http_dialogue, data)

@@ -42,6 +42,8 @@ DONE_TASKS_LOCK = "lock"
 LAST_SUCCESSFUL_READ = "last_successful_read"
 LAST_SUCCESSFUL_EXECUTED_TASK = "last_successful_executed_task"
 WAS_LAST_READ_SUCCESSFUL = "was_last_read_successful"
+LAST_READ_ATTEMPT_TS = "last_read_attempt_ts"
+INFLIGHT_READ_TS = "inflight_read_ts"
 
 LEDGER_API_ADDRESS = str(LEDGER_CONNECTION_PUBLIC_ID)
 
@@ -182,6 +184,7 @@ class ContractHandler(BaseHandler):
     def _handle_get_undelivered_reqs(self, body: Dict[str, Any]) -> None:
         """Handle get undelivered reqs."""
         reqs = body.get("data", [])
+        self.context.shared_state[INFLIGHT_READ_TS] = None
         if len(reqs) == 0:
             # for healthcheck metrics
             queue_size = len(self.pending_tasks)
