@@ -68,6 +68,8 @@ PENDING_TASKS = "pending_tasks"
 DONE_TASKS = "ready_tasks"
 DONE_TASKS_LOCK = "lock"
 GNOSIS_CHAIN = "gnosis"
+LAST_READ_ATTEMPT_TS = "last_read_attempt_ts"
+INFLIGHT_READ_TS = "inflight_read_ts"
 INITIAL_DEADLINE = 1200.0  # 20mins of deadline
 SUBSEQUENT_DEADLINE = 300.0  # 5mins of deadline
 
@@ -246,9 +248,15 @@ class TaskExecutionBehaviour(SimpleBehaviour):
 
     def _check_for_new_marketplace_reqs(self) -> None:
         """Check for new reqs."""
-        if self.params.in_flight_req or not self._should_poll("marketplace"):
-            # do nothing if there is an in flight request
-            # or if we should not poll yet
+        now = time.time()
+
+        # This prevents readiness from going stale while we're legitimately busy.
+        if self.params.in_flight_req:
+            self.context.shared_state[INFLIGHT_READ_TS] = now
+            return
+
+        if not self._should_poll("marketplace"):
+            self.context.shared_state[LAST_READ_ATTEMPT_TS] = now
             return
 
         from_block = self.params.req_params.from_block.get("marketplace", None)
@@ -256,7 +264,13 @@ class TaskExecutionBehaviour(SimpleBehaviour):
             # set the initial from block
             self._populate_from_block()
             self.params.req_type = "marketplace"
+            self.context.shared_state[LAST_READ_ATTEMPT_TS] = now
             return
+
+        # We are actually going to poll → stamp both attempt and inflight.
+        self.context.shared_state[LAST_READ_ATTEMPT_TS] = now
+        self.context.shared_state[INFLIGHT_READ_TS] = now
+
         self._check_undelivered_reqs_marketplace()
         self.params.in_flight_req = True
         self.params.req_params.last_polling["marketplace"] = time.time()
