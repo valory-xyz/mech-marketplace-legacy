@@ -8,7 +8,7 @@ aea_version: '>=2.0.0, <3.0.0'
 fingerprint:
   __init__.py: bafybeicmgkagyhgwn2ktcdjbprijalbdyj26cvza4d3b7uvmehvy4mmr3i
   build/StakingToken.json: bafybeibhcwyawq377innrpq4ytpw5kotufjqo7cyd2rjhyit34mnbks5b4
-  contract.py: bafybeidpzwkmttvykonirnkd3jwiuo42hwd6qykazfimoiqscv3qjrjt4y
+  contract.py: bafybeieza7oaxtx3ulttar4c3k73lbllvn64smmrxfsrfi4felmu4is2gu
 fingerprint_ignore_patterns: []
 contracts: []
 class_name: StakingTokenContract
