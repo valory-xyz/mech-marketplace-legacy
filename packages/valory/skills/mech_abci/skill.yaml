@@ -111,6 +111,7 @@ models:
       on_chain_service_id: null
       polling_interval: 30.0
       tasks_batch_size: 10
+      staking_contract_address: '0x0000000000000000000000000000000000000000'
       request_retry_delay: 1.0
       request_timeout: 10.0
       reset_pause_duration: 10

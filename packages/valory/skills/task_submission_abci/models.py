@@ -95,6 +95,9 @@ class Params(BaseParams):
         self.agent_funding_amount = self._ensure("agent_funding_amount", kwargs, int)
         self.polling_interval = self._ensure("polling_interval", kwargs, float)
         self.tasks_batch_size = self._ensure("tasks_batch_size", kwargs, int)
+        self.staking_contract_address: str = self._ensure(
+            "staking_contract_address", kwargs, str
+        )
         super().__init__(*args, **kwargs)
 
     @classmethod

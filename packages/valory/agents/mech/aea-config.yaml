@@ -232,6 +232,7 @@ models:
       termination_from_block: ${int:0}
       polling_interval: ${float:30.0}
       tasks_batch_size: ${int:10}
+      staking_contract_address: ${str:0x0000000000000000000000000000000000000000}
       mech_to_subscription: ${dict:{}}
       hash_checkpoint_address: ${str:0x694e62BDF7Ff510A4EE66662cf4866A961a31653}
       setup:
