@@ -462,7 +462,13 @@ class FundsSplittingBehaviour(DeliverBehaviour, ABC):
         :returns: a dictionary mapping operator addresses to the amount of funds they should receive.
         :yields: None
         """
-        on_chain_id = cast(int, self.params.on_chain_service_id)
+        on_chain_id = self.params.on_chain_service_id
+        if on_chain_id is None:
+            self.context.logger.warning(
+                "Cannot split the funds of the service without a configured on-chain service id."
+            )
+            return None
+
         service_owner = yield from self._get_service_owner(on_chain_id)
         if service_owner is None:
             self.context.logger.warning(
