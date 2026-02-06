@@ -7,7 +7,7 @@ license: Apache-2.0
 fingerprint:
   README.md: bafybeif7ia4jdlazy6745ke2k2x5yoqlwsgwr6sbztbgqtwvs3ndm2p7ba
 fingerprint_ignore_patterns: []
-agent: valory/mech:0.1.0:bafybeibwj7xjy4dlswdfmaikiutq7wt2utyfuhx3toitjhkgwexm3aerue
+agent: valory/mech:0.1.0:bafybeibhmsmkhchaaxalqtepnoymh2zajj5ex3d7j23zzt2tksnovrxa6q
 number_of_agents: 4
 deployment:
   agent:
@@ -48,6 +48,7 @@ type: skill
         reset_period_count: ${RESET_PERIOD_COUNT:int:1000}
         polling_interval: ${POLLING_INTERVAL:float:30.0}
         tasks_batch_size: ${TASKS_BATCH_SIZE:int:10}
+        staking_contract_address: ${STAKING_CONTRACT_ADDRESS:str:0x0000000000000000000000000000000000000000}
         service_endpoint_base: ${SERVICE_ENDPOINT_BASE:str:https://dummy_service.autonolas.tech/}
         use_slashing: ${USE_SLASHING:bool:false}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
@@ -91,6 +92,7 @@ type: skill
         slash_cooldown_hours: ${SLASH_COOLDOWN_HOURS:int:3}
         polling_interval: ${POLLING_INTERVAL:float:30.0}
         tasks_batch_size: ${TASKS_BATCH_SIZE:int:10}
+        staking_contract_address: ${STAKING_CONTRACT_ADDRESS:str:0x0000000000000000000000000000000000000000}
         slash_threshold_amount: ${SLASH_THRESHOLD_AMOUNT:int:10000000000000000}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         light_slash_unit_amount: ${LIGHT_SLASH_UNIT_AMOUNT:int:5000000000000000}
@@ -124,6 +126,7 @@ type: skill
         polling_interval: ${POLLING_INTERVAL:float:30.0}
         validate_timeout: ${VALIDATE_TIMEOUT:int:240}
         tasks_batch_size: ${TASKS_BATCH_SIZE:int:10}
+        staking_contract_address: ${STAKING_CONTRACT_ADDRESS:str:0x0000000000000000000000000000000000000000}
         tendermint_com_url: ${TENDERMINT_COM_URL:str:http://localhost:8080}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         tendermint_url: ${TENDERMINT_URL:str:http://localhost:26657}
@@ -167,6 +170,7 @@ type: skill
         polling_interval: ${POLLING_INTERVAL:float:30.0}
         validate_timeout: ${VALIDATE_TIMEOUT:int:240}
         tasks_batch_size: ${TASKS_BATCH_SIZE:int:10}
+        staking_contract_address: ${STAKING_CONTRACT_ADDRESS:str:0x0000000000000000000000000000000000000000}
         termination_from_block: ${TERMINATION_FROM_BLOCK:int:0}
         tendermint_p2p_url: ${TM_P2P_ENDPOINT_NODE_3:str:node0:26656}
         termination_sleep: ${TERMINATION_SLEEP:int:900}

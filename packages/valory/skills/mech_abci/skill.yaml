@@ -23,7 +23,7 @@ skills:
 - valory/abstract_round_abci:0.1.0:bafybeibiw4oqwqvo4jccwz5fb73iardzychgvcl66tceiildohoju2ikti
 - valory/registration_abci:0.1.0:bafybeibijuyjldikiggoeqn4pdp244z66da6x2jbf6yxw5y3f326rwxpnq
 - valory/reset_pause_abci:0.1.0:bafybeihkj6lmaypspyxe5qqrjgnolyck62pyvqoylr24ab6ue4steqcw7e
-- valory/task_submission_abci:0.1.0:bafybeie3ewjzofnst3rvoqbemv7runy44ksa2r77dy5hfccbs55hytgyom
+- valory/task_submission_abci:0.1.0:bafybeib4vlf2vcbssx3ceyeciatngsm6aidhhpwgk3dlu3j2x7nv6rjkfu
 - valory/transaction_settlement_abci:0.1.0:bafybeigh2vkt74jrad5gtsczrgqcuhcqe7jkgjy7jdw56yamlzwwnaymjy
 - valory/subscription_abci:0.1.0:bafybeiffgxfs7sonbncc64bz3wzwcbvw52mf66rkbluhcdosedbjplcgci
 behaviours:
@@ -111,6 +111,7 @@ models:
       on_chain_service_id: null
       polling_interval: 30.0
       tasks_batch_size: 10
+      staking_contract_address: '0x0000000000000000000000000000000000000000'
       request_retry_delay: 1.0
       request_timeout: 10.0
       reset_pause_duration: 10

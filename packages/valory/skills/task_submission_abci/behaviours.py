@@ -57,6 +57,7 @@ from packages.valory.contracts.multisend.contract import (
     MultiSendOperation,
 )
 from packages.valory.contracts.service_registry.contract import ServiceRegistryContract
+from packages.valory.contracts.staking_token.contract import StakingTokenContract
 from packages.valory.protocols.contract_api import ContractApiMessage
 from packages.valory.protocols.ledger_api import LedgerApiMessage
 from packages.valory.skills.abstract_round_abci.base import AbstractRound
@@ -462,7 +463,13 @@ class FundsSplittingBehaviour(DeliverBehaviour, ABC):
         :returns: a dictionary mapping operator addresses to the amount of funds they should receive.
         :yields: None
         """
-        on_chain_id = cast(int, self.params.on_chain_service_id)
+        on_chain_id = self.params.on_chain_service_id
+        if on_chain_id is None:
+            self.context.logger.warning(
+                "Cannot split the funds of the service without a configured on-chain service id."
+            )
+            return None
+
         service_owner = yield from self._get_service_owner(on_chain_id)
         if service_owner is None:
             self.context.logger.warning(
@@ -543,23 +550,67 @@ class FundsSplittingBehaviour(DeliverBehaviour, ABC):
             "data": data,
         }
 
+    def _is_participating_in_staking(
+        self, service_id: int
+    ) -> Generator[None, None, Optional[bool]]:
+        """Whether the service is participating in staking."""
+        contract_api_msg = yield from self.get_contract_api_response(
+            performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
+            contract_address=self.params.staking_contract_address,
+            contract_id=str(StakingTokenContract.contract_id),
+            contract_callable="get_service_staking_state",
+            service_id=service_id,
+        )
+        if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
+            self.context.logger.warning(
+                f"Failed to get the service's staking state: {contract_api_msg}"
+            )
+            return None
+
+        state = contract_api_msg.state.body.get("state", None)
+        if state is None:
+            self.context.logger.warning(
+                f"No service staking state was found in response: {contract_api_msg}"
+            )
+
+        return bool(state)
+
+    def _get_service_owner_contract(self, service_id: int) -> Dict[str, str]:
+        """Get the information of the contract that includes the owner's information for service with the given id."""
+        if self._is_participating_in_staking(service_id):
+            return dict(
+                contract_address=self.params.staking_contract_address,
+                contract_id=str(StakingTokenContract.contract_id),
+            )
+        return dict(
+            contract_address=str(self.params.service_registry_address),
+            contract_id=str(ServiceRegistryContract.contract_id),
+        )
+
     def _get_service_owner(
         self, service_id: int
     ) -> Generator[None, None, Optional[str]]:
         """Get the service owner address."""
+        contract_kwargs = self._get_service_owner_contract(service_id)
         contract_api_msg = yield from self.get_contract_api_response(
             performative=ContractApiMessage.Performative.GET_STATE,  # type: ignore
-            contract_address=self.params.service_registry_address,
-            contract_id=str(ServiceRegistryContract.contract_id),
             contract_callable="get_service_owner",
             service_id=service_id,
+            **contract_kwargs,
         )
         if contract_api_msg.performative != ContractApiMessage.Performative.STATE:
             self.context.logger.warning(
                 f"get_service_owner unsuccessful!: {contract_api_msg}"
             )
             return None
-        return cast(str, contract_api_msg.state.body["service_owner"])
+
+        owner = contract_api_msg.state.body.get("service_owner", None)
+        if owner is None:
+            self.context.logger.warning(
+                f"No owner was found in response: {contract_api_msg}"
+            )
+
+        return owner
 
     def _get_funds_by_operator(
         self, operator_share: int
