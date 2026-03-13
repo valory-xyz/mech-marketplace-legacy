@@ -52,4 +52,4 @@ class StakingTokenContract(Contract):
         """Check whether the service is staked."""
         contract_instance = cls.get_instance(ledger_api, contract_address)
         info = contract_instance.functions.mapServiceInfo(service_id).call()
-        return {"owner": info[1]}
+        return {"service_owner": info[1]}
